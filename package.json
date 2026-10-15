@@ -2,7 +2,7 @@
 	"scripts": {
 		"dev:server": "bun --watch server.ts",
 		"dev:frontend": "bun run --cwd frontend dev",
-		"dev": "concurrently \"bun run dev:server\" \"bun run dev:frontend\"",
+		"dev": "concurrently --names backend,frontend  \"bun run dev:server\" \"bun run dev:frontend\"",
 		"build": "bun run --cwd frontend build",
 		"start": "bun server.ts"
 	},
