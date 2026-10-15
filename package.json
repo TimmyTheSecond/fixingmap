@@ -5,7 +5,9 @@
 		"dev:frontend": "bun run --cwd frontend dev",
 		"dev": "concurrently --names backend,frontend  \"bun run dev:server\" \"bun run dev:frontend\"",
 		"build": "bun run --cwd frontend build",
-		"start": "bun server.ts"
+		"start": "bun server.ts",
+		"lint": "oxlint",
+		"lint:fix": "oxlint --fix"
 	},
 	"dependencies": {
 		"@hono/bun": "^1.0.1",
@@ -16,7 +18,12 @@
 	},
 	"devDependencies": {
 		"@types/bun": "1.3.5",
-		"concurrently": "^10.0.6"
+		"concurrently": "^10.0.6",
+		"oxfmt": "^0.73.0",
+		"oxlint": "^1.88.0"
 	},
-	"packageManager": "bun@1.3.5"
+	"packageManager": "bun@1.3.5",
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,mjs,cjs}": "bun run lint"
+	}
 }
