@@ -16,21 +16,6 @@ You can connect to the WebSocket at `https://map.dovedale.uk/api/ws` (`/ws` stil
 
 The updated message payload and TypeScript & Luau types will be provided once its contents have been confirmed - there will be no immediate breaking changes but some properties, e.g. `trainData`, will be deprecated.
 
-## Development
+## Contributing
 
-```
-bun install
-bun dev
-```
-
-## Production
-
-The [website](https://map.dovedale.uk) will be automatically updated and restarted when commits are pushed to `main`.
-
-```
-bun install
-bun install pm2 -g
-pm2 save
-pm2 startup
-pm2 start pm2.config.js
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for a guide on submitting issues and PRs, plus local development.
