@@ -1,36 +1,40 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { MAP_IMAGE_SIZE } from "../constants";
-import Panzoom from "@panzoom/panzoom";
+import createPanZoom from "panzoom";
 
 const zoomParent = ref<HTMLDivElement>();
 const zoom = ref<HTMLImageElement>();
 
-onMounted(() => {
-	const panzoom = Panzoom(zoom.value, {
-		maxScale: 10,
-		minScale: 0.05,
-		startScale: 0.1,
-		// startX: -192098,
-		// startY: -153423,
-
-		// cur
-		canvas: true,
-		contain: "outside",
-
-		animate: true,
-		duration: 50,
+onMounted(async () => {
+	if (!zoom.value || !zoomParent.value)
+		throw new Error("Could not find image or picture element");
+	createPanZoom(zoom.value, {
+		maxZoom: 10,
+		minZoom: 0.05,
+		initialZoom: 0.067,
+		smoothScroll: false,
+		boundsPadding: 0,
+		bounds: true,
 	});
-	console.log(panzoom.getScale(), panzoom.getPan());
 
-	zoomParent.value.addEventListener("wheel", panzoom.zoomWithWheel);
+	await zoom.value.decode();
+	zoom.value.style.backgroundImage = "";
 });
 </script>
 
 <template>
-	<div ref="zoomParent" class="select-none overflow-hidden h-screen">
-		<img ref="zoom" class="max-w-none" src="/src/assets/map.png" />
-	</div>
+	<picture ref="zoomParent" class="select-none overflow-hidden h-screen">
+		<source type="image/avif" srcset="/src/assets/map.avif" />
+		<img
+			ref="zoom"
+			class="max-w-none bg-cover"
+			style="background-image: url(/src/assets/map-small.png)"
+			src="/src/assets/map.png"
+			:width="MAP_IMAGE_SIZE.x"
+			:height="MAP_IMAGE_SIZE.y"
+		/>
+	</picture>
 </template>
 
 <!-- <VueZoomable
