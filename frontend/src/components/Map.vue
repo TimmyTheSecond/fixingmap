@@ -14,8 +14,6 @@ onMounted(async () => {
 		minZoom: 0.05,
 		initialZoom: 0.067,
 		smoothScroll: false,
-		boundsPadding: 0,
-		bounds: true,
 	});
 
 	await zoom.value.decode();
