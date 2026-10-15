@@ -1,49 +1,20 @@
 # Dovedale Live Map
 
-> [!WARNING]
-> For contributors, update your testing workflows to provide the token in the `Authorization` header with "Bearer TOKEN" instead of the body.
-> The `token` field in the body will no longer be supported soon.
+> [!INFO]
+> This is the in-development revamp of the Live Map, to bring it up to players' expectations.
+>
+> It replaces the frontend entirely, using Vue and Vite, adding info panels for players, trains and boxes, and far better rendering for trains and players.
 
-Hosted at [map.dovedale.uk](https://map.dovedale.uk), this project aims to provide a near-realtime view of players in [Dovedale Railway](https://play.dovedale.uk).
-
-Uses Express to host a web server, with Bun as the preferred package manager.
+Hosted at [map.dovedale.wiki](https://map.dovedale.wiki), this project aims to provide a near-realtime view of players in [Dovedale Railway](https://play.dovedale.wiki).
 
 Feel free to have a look through the code or contribute - just make sure you follow general style and document PRs and code changes properly.
 
 ## WebSocket Usage
+
 You are free to use the data provided by the Live Map for your own projects.
-You can connect to the WebSocket at `https://map.dovedale.uk/ws` and you will receive a message every time a Roblox server sends a request to the web server, messages look like this:
-```json
-{
-	"jobId": "0cf6c9f0-36be-4b98-8878-0e4a88913ea1",
-	"players": [
-		{
-			"username": "cl0vermead0w",
-			"userId": 92133828,
-			"position": { "y": -1193, "x": 11813 },
-			"box": {
-				"name": "GE",
-				"fullName": "Gleethrop End",
-				"isHost": true
-			}
-		},
-		{
-			"username": "MrTortoise_guy",
-			"userId": 361635687,
-			// This was changed from an array in 2.0.1h7
-			"trainData": {
-				"destination": "Gleethrop End",
-				"trainClass": "Class 150/2",
-				"headcode": "2G81",
-				"trainType": "Passenger",
-				"trainSpeed": 42.3,
-				"carriageAmount": 2
-			},
-			"position": { "y": -1099, "x": 3173 }
-		}
-	]
-}
-```
+You can connect to the WebSocket at `https://map.dovedale.wiki/api/ws` (`/ws` still supported but deprecated) and you will receive a message every time a Roblox server sends a request to the web server.
+
+The updated message payload and TypeScript & Luau types will be provided once its contents have been confirmed - there will be no immediate breaking changes but some properties, e.g. `trainData`, will be deprecated.
 
 ## Development
 
@@ -53,7 +24,9 @@ bun dev
 ```
 
 ## Production
-The [website](https://map.dovedale.uk) will be automatically updated and restarted when commits are pushed to `main`.
+
+The [website](https://map.dovedale.wiki) will be automatically updated and restarted when commits are pushed to `main`.
+
 ```
 bun install
 bun install pm2 -g
