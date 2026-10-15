@@ -1,6 +1,6 @@
 # Dovedale Live Map
 
-> [!INFO]
+> [!NOTE]
 > This is the in-development revamp of the Live Map, to bring it up to players' expectations.
 >
 > It replaces the frontend entirely, using Vue and Vite, adding info panels for players, trains and boxes, and far better rendering for trains and players.
