@@ -17,6 +17,7 @@ Install the relevant dependencies ([Bun](https://bun.com/get) is recommended), c
 
 ```bash
 bun install
+bun install --cwd frontend
 cp .env.example .env
 bun dev
 ```
