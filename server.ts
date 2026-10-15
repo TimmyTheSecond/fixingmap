@@ -1,5 +1,5 @@
 import { Context, Hono } from "hono";
-import { serveStatic, upgradeWebSocket, websocket } from "hono/bun";
+import { serveStatic, upgradeWebSocket, websocket } from "@hono/bun";
 import { WSContext } from "hono/ws";
 import z from "zod/v4";
 import { generateTileVariants } from "./tile-images";
@@ -31,11 +31,13 @@ const playerSchema = z.strictObject({
 		x: z.int(),
 		y: z.int(),
 	}),
-	box: z.strictObject({
-		name: z.string(),
-		fullName: z.string(),
-		isHost: z.boolean().optional(),
-	}).optional(),
+	box: z
+		.strictObject({
+			name: z.string(),
+			fullName: z.string(),
+			isHost: z.boolean().optional(),
+		})
+		.optional(),
 });
 const requestSchema = z.strictObject({
 	jobId: z.string(),
