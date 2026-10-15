@@ -1,0 +1,123 @@
+# originated from https://github.com/dermitzos/panzoom-getDimensions-fix/commit/c9440abd123a9fd0b47a64411a2e186f23fb57ae
+
+diff --git a/node_modules/@panzoom/panzoom/.bun-tag-ec5431687d6bbf73 b/.bun-tag-ec5431687d6bbf73
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/panzoom.es.js b/dist/panzoom.es.js
+index e622e1aa2cd575720c4e64439d9def12b8520727..5a70b7532187ac4f657fbd6ec11a666b605c4459 100644
+--- a/dist/panzoom.es.js
++++ b/dist/panzoom.es.js
+@@ -402,6 +402,13 @@ function Panzoom(elem, options) {
+             elem.style.touchAction = opts.touchAction;
+         }
+     }
++    const originalDimensions = getDimensions(elem).elem
++    function resetDimensions(entries) {
++    originalDimensions.width = entries[0].contentRect.width;
++        originalDimensions.height = entries[0].contentRect.height;
++    }
++    const observer = new ResizeObserver(resetDimensions);
++    observer.observe(elem);
+     let x = 0;
+     let y = 0;
+     let scale = 1;
+@@ -454,8 +461,8 @@ function Panzoom(elem, options) {
+         }
+         if (opts.contain) {
+             const dims = getDimensions(elem);
+-            const realWidth = dims.elem.width / scale;
+-            const realHeight = dims.elem.height / scale;
++            const realWidth = originalDimensions.width;
++            const realHeight = originalDimensions.height;
+             const scaledWidth = realWidth * toScale;
+             const scaledHeight = realHeight * toScale;
+             const diffHorizontal = (scaledWidth - realWidth) / 2;
+@@ -517,8 +524,8 @@ function Panzoom(elem, options) {
+         let maxScale = options.maxScale;
+         if (opts.contain) {
+             const dims = getDimensions(elem);
+-            const elemWidth = dims.elem.width / scale;
+-            const elemHeight = dims.elem.height / scale;
++            const elemWidth = originalDimensions.width;
++            const elemHeight = originalDimensions.height;
+             if (elemWidth > 1 && elemHeight > 1) {
+                 const parentWidth = dims.parent.width - dims.parent.border.left - dims.parent.border.right;
+                 const parentHeight = dims.parent.height - dims.parent.border.top - dims.parent.border.bottom;
+@@ -611,8 +618,8 @@ function Panzoom(elem, options) {
+         // Adjust the clientX/clientY for HTML elements,
+         // because they have a transform-origin of 50% 50%
+         if (!isSVG) {
+-            clientX -= dims.elem.width / scale / 2;
+-            clientY -= dims.elem.height / scale / 2;
++            clientX -= originalDimensions.width / 2;
++            clientY -= originalDimensions.height / 2;
+         }
+         // Convert the mouse point from it's position over the
+         // effective area before the scale to the position
+@@ -735,6 +742,7 @@ function Panzoom(elem, options) {
+         destroyPointer('down', options.canvas ? parent : elem, handleDown);
+         destroyPointer('move', document, handleMove);
+         destroyPointer('up', document, handleUp);
++        observer.disconnect();
+     }
+     if (!options.noBind) {
+         bind();
+diff --git a/dist/panzoom.js b/dist/panzoom.js
+index 06622c5e73e9fb6b8e0bf4cdbe3997a06c789c94..a7da318e71e4087658a7ee444cbe1414cdbdd0c0 100644
+--- a/dist/panzoom.js
++++ b/dist/panzoom.js
+@@ -408,6 +408,13 @@
+               elem.style.touchAction = opts.touchAction;
+           }
+       }
++      const originalDimensions = getDimensions(elem).elem
++      function resetDimensions(entries) {
++          originalDimensions.width = entries[0].contentRect.width
++          originalDimensions.height = entries[0].contentRect.height
++      }
++      const observer = new ResizeObserver(resetDimensions)
++      observer.observe(elem)
+       let x = 0;
+       let y = 0;
+       let scale = 1;
+@@ -460,8 +467,8 @@
+           }
+           if (opts.contain) {
+               const dims = getDimensions(elem);
+-              const realWidth = dims.elem.width / scale;
+-              const realHeight = dims.elem.height / scale;
++              const realWidth = originalDimensions.width;
++              const realHeight = originalDimensions.height;
+               const scaledWidth = realWidth * toScale;
+               const scaledHeight = realHeight * toScale;
+               const diffHorizontal = (scaledWidth - realWidth) / 2;
+@@ -523,8 +530,8 @@
+           let maxScale = options.maxScale;
+           if (opts.contain) {
+               const dims = getDimensions(elem);
+-              const elemWidth = dims.elem.width / scale;
+-              const elemHeight = dims.elem.height / scale;
++              const elemWidth = originalDimensions.width;
++              const elemHeight = originalDimensions.height;
+               if (elemWidth > 1 && elemHeight > 1) {
+                   const parentWidth = dims.parent.width - dims.parent.border.left - dims.parent.border.right;
+                   const parentHeight = dims.parent.height - dims.parent.border.top - dims.parent.border.bottom;
+@@ -617,8 +624,8 @@
+           // Adjust the clientX/clientY for HTML elements,
+           // because they have a transform-origin of 50% 50%
+           if (!isSVG) {
+-              clientX -= dims.elem.width / scale / 2;
+-              clientY -= dims.elem.height / scale / 2;
++              clientX -= originalDimensions.width / 2;
++              clientY -= originalDimensions.height / 2;
+           }
+           // Convert the mouse point from it's position over the
+           // effective area before the scale to the position
+@@ -741,6 +748,7 @@
+           destroyPointer('down', options.canvas ? parent : elem, handleDown);
+           destroyPointer('move', document, handleMove);
+           destroyPointer('up', document, handleUp);
++          observer.disconnect();
+       }
+       if (!options.noBind) {
+           bind();
