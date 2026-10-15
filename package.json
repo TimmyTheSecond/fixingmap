@@ -1,4 +1,5 @@
 {
+	"name": "dovedale-map",
 	"scripts": {
 		"dev:server": "bun --watch server.ts",
 		"dev:frontend": "bun run --cwd frontend dev",
