@@ -7,6 +7,5 @@ import { reactive } from "vue";
 export const useMapStore = defineStore("map", () => {
 	return reactive({
 		zoom: 1,
-		focusedPlayer: 1,
 	});
 });

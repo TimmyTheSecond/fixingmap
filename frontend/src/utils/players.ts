@@ -1,3 +1,5 @@
+import type { Vector2 } from "./positions";
+
 export interface Vector3 {
 	x: number;
 	y: number;
@@ -36,9 +38,6 @@ export interface Player {
 	};
 
 	/** @deprecated `trains` should be used instead */
-	trainData: TrainData["data"];
-	position: {
-		x: number;
-		y: number;
-	};
+	trainData?: TrainData["data"];
+	position: Vector2;
 }
