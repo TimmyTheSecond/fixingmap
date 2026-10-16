@@ -3,12 +3,11 @@ import { onMounted, ref } from "vue";
 import { MAP_IMAGE_SIZE } from "../constants";
 import createPanZoom from "panzoom";
 
-const zoomParent = ref<HTMLDivElement>();
-const zoom = ref<HTMLImageElement>();
+const zoom = ref<HTMLDivElement>();
+const image = ref<HTMLImageElement>();
 
 onMounted(async () => {
-	if (!zoom.value || !zoomParent.value)
-		throw new Error("Could not find image or picture element");
+	if (!zoom.value) throw new Error("Could not find image or picture element");
 	createPanZoom(zoom.value, {
 		maxZoom: 10,
 		minZoom: 0.05,
@@ -16,23 +15,31 @@ onMounted(async () => {
 		smoothScroll: false,
 	});
 
-	await zoom.value.decode();
+	await image.value?.decode();
 	zoom.value.style.backgroundImage = "";
 });
 </script>
 
 <template>
-	<picture ref="zoomParent" class="select-none overflow-hidden h-screen">
-		<source type="image/avif" srcset="/src/assets/map.avif" />
-		<img
-			ref="zoom"
-			class="max-w-none bg-cover"
-			style="background-image: url(/src/assets/map-small.png)"
-			src="/src/assets/map.png"
-			:width="MAP_IMAGE_SIZE.x"
-			:height="MAP_IMAGE_SIZE.y"
-		/>
-	</picture>
+	<div
+		ref="zoom"
+		class="will-change-transform bg-cover relative select-none"
+		:style="`width: ${MAP_IMAGE_SIZE.x}px; height: ${MAP_IMAGE_SIZE.y}px; background-image: url(/src/assets/map-small.png)`"
+	>
+		<div class="absolute z-10 top-0 left-0 w-full h-full text-[2000px]">
+			<PlayerDot />
+		</div>
+		<picture class="overflow-hidden h-screen">
+			<source type="image/avif" srcset="/src/assets/map.avif" />
+			<img
+				ref="image"
+				class="max-w-none will-change-transform"
+				src="/src/assets/map.png"
+				:width="MAP_IMAGE_SIZE.x"
+				:height="MAP_IMAGE_SIZE.y"
+			/>
+		</picture>
+	</div>
 </template>
 
 <!-- <VueZoomable
