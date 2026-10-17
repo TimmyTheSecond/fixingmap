@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { Player } from "../../utils/players";
+import { getPlayerColor, type Player } from "../../utils/players";
 import { ImagePosition } from "../../utils/positions";
 import { useMapStore } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
@@ -38,7 +38,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 				'rounded-full size-9 border-4 border-zinc-950 group-hover:border-blue-500 bg-[#02B857]',
 				selected ? 'outline-2 outline-blue-500' : '',
 			]"
-			:style="`scale: ${isMediumZoom || selected ? 1 : 0.5}`"
+			:style="`scale: ${isMediumZoom || selected ? 1 : 0.5}; background-color: ${getPlayerColor(player)};`"
 		></div>
 		<div
 			class="flex flex-col px-1.5 py-1 rounded-lg text-lg bg-zinc-950/60"
