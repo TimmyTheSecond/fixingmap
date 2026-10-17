@@ -35,7 +35,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 	>
 		<div
 			:class="[
-				'rounded-full size-9 border-4 border-zinc-950 group-hover:border-blue-500 bg-[#02B857]',
+				'rounded-full size-9 border-4 border-zinc-950 group-hover:border-blue-500',
 				selected ? 'outline-2 outline-blue-500' : '',
 			]"
 			:style="`scale: ${isMediumZoom || selected ? 1 : 0.5}; background-color: ${getPlayerColor(player)};`"
