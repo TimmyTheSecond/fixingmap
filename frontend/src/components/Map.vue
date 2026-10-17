@@ -29,6 +29,14 @@ function zoomToImagePosition(position: ImagePosition) {
 	);
 }
 
+function selectPlayer(player: Player) {
+	if (mapState.selectedPlayer === player) {
+		mapState.selectedPlayer = null;
+		return;
+	}
+	mapState.selectedPlayer = player;
+}
+
 onMounted(async () => {
 	if (!zoomElement.value)
 		throw new Error("Could not find image or picture element");
@@ -92,7 +100,7 @@ onMounted(async () => {
 				:player="player"
 				:key="player.userId"
 				:selected="mapState.selectedPlayer === player"
-				@select="mapState.selectedPlayer = player"
+				@select="selectPlayer(player)"
 			/>
 		</div>
 		<picture class="overflow-hidden h-screen">
