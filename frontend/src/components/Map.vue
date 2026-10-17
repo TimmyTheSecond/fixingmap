@@ -40,6 +40,7 @@ function selectPlayer(player: Player) {
 onMounted(async () => {
 	if (!zoomElement.value)
 		throw new Error("Could not find image or picture element");
+
 	panzoom = createPanZoom(zoomElement.value, {
 		maxZoom: 10,
 		minZoom: 0.05,
@@ -71,7 +72,6 @@ onMounted(async () => {
 	mapState.zoom = panzoom.getTransform().scale;
 	panzoom.on("zoom", () => {
 		mapState.zoom = panzoom!.getTransform().scale;
-		console.log(mapState);
 	});
 
 	window.addEventListener("resize", () => {
