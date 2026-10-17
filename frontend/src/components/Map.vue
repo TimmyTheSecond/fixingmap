@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef, watch } from "vue";
+import { computed, onMounted, useTemplateRef, watch } from "vue";
 import { MAP_IMAGE_SIZE } from "../constants";
 import createPanZoom, { type PanZoom } from "panzoom";
 import PlayerDot from "./overlay/PlayerDot.vue";
 import type { Player } from "../utils/players";
-import { ImagePosition, Vector2 } from "../utils/positions";
+import { ImagePosition } from "../utils/positions";
 import { useMapStore } from "../composables/map-state";
-
-const examplePlayer: Player = {
-	username: "dgox_xd",
-	displayName: "Dog",
-	userId: 1,
-	trains: {},
-	position: new Vector2(1231, 534),
-};
+import { useServerStore } from "../composables/server-state";
 
 const zoomElement = useTemplateRef<HTMLDivElement>("zoom");
 const imageElement = useTemplateRef<HTMLImageElement>("image");
 const mapState = useMapStore();
+const serverState = useServerStore();
 
-const players = ref([examplePlayer]);
+const players = computed(
+	() =>
+		serverState.currentServer?.players ??
+		serverState.servers.reduce<Player[]>(
+			(players, server) => players.concat(server.players),
+			[],
+		),
+);
 let panzoom: PanZoom | null = null;
 
 function zoomToImagePosition(position: ImagePosition) {

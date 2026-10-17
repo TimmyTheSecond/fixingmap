@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Map from "./components/Map.vue";
+import ServerDropdown from "./components/ServerDropdown.vue";
 import Snackbar from "./components/Snackbar.vue";
 import { useMapStore } from "./composables/map-state";
 
@@ -11,10 +12,11 @@ if (import.meta.env.DEV) {
 
 <template>
 	<div class="overflow-hidden h-screen z-1 text-zinc-200">
-		<div class="fixed top-0 z-20 flex w-full justify-center p-6">
+		<div class="fixed top-0 z-20 flex w-full justify-center p-4">
 			<Snackbar />
 		</div>
-		<div class="fixed top-0 right-0 z-20 flex justify-center p-6">
+		<div class="fixed top-0 left-0 z-20 flex justify-center p-4">
+			<ServerDropdown />
 			Zoom: {{ store.zoom.toFixed(2) }}
 		</div>
 		<Map class="fixed top-0 left-0 z-0" />
