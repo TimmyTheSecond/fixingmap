@@ -4,16 +4,19 @@
 import { computed, ref, Transition, useTemplateRef } from "vue";
 import { useServerStore } from "../composables/server-state";
 import { Icon } from "@iconify/vue";
+import ServerDropdownItem from "./ServerDropdownItem.vue";
 const serverState = useServerStore();
 
 const menuOpen = ref(false);
 const searchInput = useTemplateRef("search");
 const filter = ref("");
-const filteredServers = computed(() =>
-	serverState.servers.filter((server) =>
+const filteredServers = computed(() => {
+	if (filter.value.trim() == "") return serverState.servers;
+	return serverState.servers.filter((server) =>
 		server.shortId?.includes(filter.value),
-	),
-);
+	);
+});
+
 const totalPlayerCount = computed(() =>
 	serverState.servers.reduce(
 		(total, server) => total + server.players.length,
@@ -67,42 +70,26 @@ function toggleMenu() {
 					placeholder="Search..."
 				/>
 				<div class="w-full h-px bg-zinc-700"></div>
-				<div class="flex flex-col p-1 w-full">
-					<button
-						:class="[
-							'flex gap-2 px-2.5 py-1.5 items-center transition-colors duration-150 hover:bg-zinc-700/50 rounded-md',
-							serverState.currentServer === null ? 'bg-zinc-700/80' : '',
-						]"
+				<div class="flex flex-col p-1 gap-0.5 w-full">
+					<ServerDropdownItem
+						label="All Servers"
+						:player-count="totalPlayerCount"
+						:selected="serverState.currentServer === null"
 						@click="
 							serverState.currentServer = null;
 							toggleMenu();
 						"
-					>
-						All Servers
-						<div class="flex gap-1 items-center text-base text-zinc-400">
-							{{ totalPlayerCount }}
-							<Icon icon="material-symbols:group" />
-						</div>
-					</button>
-					<button
+					/>
+					<ServerDropdownItem
 						v-for="server in filteredServers"
-						:class="[
-							'flex gap-2 px-2.5 py-1.5 items-center transition-colors duration-150 hover:bg-zinc-700/50 rounded-md',
-							server === serverState.currentServer
-								? 'bg-zinc-700/80'
-								: '',
-						]"
+						:label="server.shortId"
+						:player-count="server.players.length"
+						:selected="server === serverState.currentServer"
 						@click="
 							serverState.currentServer = server;
 							toggleMenu();
 						"
-					>
-						{{ server.shortId }}
-						<div class="flex gap-1 items-center text-base text-zinc-400">
-							{{ server.players.length }}
-							<Icon icon="material-symbols:group" />
-						</div>
-					</button>
+					/>
 				</div>
 			</div>
 		</Transition>
