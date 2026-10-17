@@ -9,6 +9,7 @@ import { useMapStore } from "../composables/map-state";
 
 const examplePlayer: Player = {
 	username: "dgox_xd",
+	displayName: "Dog",
 	userId: 1,
 	trains: {},
 	position: new Vector2(1231, 534),
