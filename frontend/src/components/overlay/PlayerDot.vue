@@ -45,7 +45,10 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			v-if="isMediumZoom || hovering"
 		>
 			<div
-				v-if="isSmallZoom || hovering || selected"
+				v-if="
+					player.displayName !== player.username &&
+					(isSmallZoom || hovering || selected)
+				"
 				class="flex items-center gap-1 text-zinc-400 text-sm"
 			>
 				<Icon icon="material-symbols:person-outline" class="text-base" />
