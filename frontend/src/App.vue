@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Map from "./components/Map.vue";
 import Snackbar from "./components/Snackbar.vue";
-import { useSnackbar } from "./composables/snackbar";
-const { show, dismiss } = useSnackbar();
+import { useMapStore } from "./composables/map-state";
 
+const store = useMapStore();
 if (import.meta.env.DEV) {
 	document.title = "Dovedale Live Map (dev)";
 }
@@ -15,20 +15,7 @@ if (import.meta.env.DEV) {
 			<Snackbar />
 		</div>
 		<div class="fixed top-0 right-0 z-20 flex justify-center p-6">
-			<button
-				class="bg-zinc-800 px-4 py-2 rounded-xl cursor-pointer"
-				@click="
-					() =>
-						show({
-							text: 'Loading map image',
-							icon: 'material-symbols:progress-activity',
-							iconClass: 'animate-spin',
-							color: 'primary',
-						})
-				"
-			>
-				hi
-			</button>
+			Zoom: {{ store.zoom.toFixed(2) }}
 		</div>
 		<Map class="fixed top-0 left-0 z-0" />
 	</div>
