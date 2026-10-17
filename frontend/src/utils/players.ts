@@ -28,6 +28,7 @@ export interface TrainData {
 
 export interface Player {
 	username: string;
+	displayName: string;
 	userId: number;
 	/** Indexed by carriage number (name) */
 	trains: Record<number, TrainData>;

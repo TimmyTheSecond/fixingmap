@@ -1,37 +1,57 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { Player } from "../../utils/players";
 import { ImagePosition } from "../../utils/positions";
 import { useMapStore } from "../../composables/map-state";
+import { Icon } from "@iconify/vue";
+
+const SIZE = 32;
 
 const mapState = useMapStore();
 
-const SIZE = 32;
-const SMALL_THRESHOLD = 0.6;
-
+const emit = defineEmits<{ select: [] }>();
 const props = defineProps<{
 	player: Player;
+	selected: boolean;
 }>();
 
-const isSmall = computed(() => mapState.zoom < SMALL_THRESHOLD);
+const hovering = ref(false);
+const isMediumZoom = computed(() => mapState.zoom > 0.6);
+const isSmallZoom = computed(() => mapState.zoom > 2);
 const zoom = computed(() => 1 / mapState.zoom);
 const position = computed(() => ImagePosition.fromWorld(props.player.position));
 </script>
 
 <template>
 	<div
-		class="flex gap-2 absolute origin-left"
-		:style="`top: ${position.y}px; left: ${position.x - (SIZE / 2) * zoom}px; scale: ${zoom}`"
+		:class="[
+			'flex absolute origin-[left_center] items-center group',
+			isMediumZoom ? 'gap-2' : 'gap-0',
+		]"
+		:style="`top: ${position.y}px; left: ${position.x - (SIZE / 2) * zoom}px; scale: ${zoom}; translate: 0 -50%;`"
+		@mouseover="hovering = true"
+		@mouseout="hovering = false"
+		@click="emit('select')"
 	>
 		<div
-			class="rounded-full w-8 h-8 outline-4 outline-zinc-950 bg-[#02B857]"
-			:style="`scale: ${isSmall ? 0.5 : 1}`"
+			:class="[
+				'rounded-full size-9 border-4 border-zinc-950 group-hover:border-blue-500 bg-[#02B857]',
+				selected ? 'outline-2 outline-blue-500' : '',
+			]"
+			:style="`scale: ${isMediumZoom || selected ? 1 : 0.5}`"
 		></div>
 		<div
-			class="flex px-1.5 py-1 gap-2 rounded-lg text-lg bg-zinc-900/60"
-			v-if="!isSmall"
+			class="flex flex-col px-1.5 py-1 rounded-lg text-lg bg-zinc-950/60"
+			v-if="isMediumZoom || hovering"
 		>
-			Dog
+			<div
+				v-if="isSmallZoom || hovering || selected"
+				class="flex items-center gap-1 text-zinc-400 text-sm"
+			>
+				<Icon icon="material-symbols:person-outline" class="text-base" />
+				{{ player.username }}
+			</div>
+			<p class="text-xl">{{ player.displayName }}</p>
 		</div>
 	</div>
 </template>
