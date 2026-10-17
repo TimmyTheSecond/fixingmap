@@ -85,7 +85,7 @@ app.get("/api/status", (context) => {
 
 app.get(
 	"/api/ws",
-	upgradeWebSocket((context) => {
+	upgradeWebSocket((_context) => {
 		return {
 			onOpen: (_event, webSocket) => {
 				webSockets.push(webSocket);
