@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, useTemplateRef } from "vue";
 import { MAP_IMAGE_SIZE } from "../constants";
 import createPanZoom from "panzoom";
 import PlayerDot from "./overlay/PlayerDot.vue";
@@ -7,8 +7,8 @@ import type { Player } from "../utils/players";
 import { Vector2 } from "../utils/positions";
 import { useMapStore } from "../composables/map-state";
 
-const zoom = ref<HTMLDivElement>();
-const image = ref<HTMLImageElement>();
+const zoom = useTemplateRef<HTMLDivElement>("zoom");
+const image = useTemplateRef<HTMLImageElement>("image");
 const mapState = useMapStore();
 const examplePlayer: Player = {
 	username: "dgox_xd",
@@ -56,15 +56,3 @@ onMounted(async () => {
 		</picture>
 	</div>
 </template>
-
-<!-- <VueZoomable
-		ref="zoomer"
-		class="w-full h-screen flex overflow-clip"
-		:min-zoom="1"
-		:max-zoom="50"
-		:enable-control-button="false"
-		zoom-origin="pointer"
-		selector="#map-image"
-		v-model:zoom="zoom"
-	>
-	</VueZoomable> -->
