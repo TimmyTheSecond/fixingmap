@@ -14,13 +14,13 @@ const emit = defineEmits<{
 <template>
 	<button
 		:class="[
-			'flex gap-2 px-2.5 py-1.5 items-center transition-colors duration-150 hover:bg-zinc-700/50 rounded-md',
+			'flex items-center gap-2 rounded-md px-2.5 py-1.5 transition-colors duration-150 hover:bg-zinc-700/50',
 			selected ? 'bg-zinc-700/80' : '',
 		]"
 		@click="emit('click')"
 	>
 		{{ label }}
-		<div class="flex gap-1 items-center text-base text-zinc-400">
+		<div class="flex items-center gap-1 text-base text-zinc-400">
 			{{ playerCount }}
 			<Icon icon="material-symbols:group" />
 		</div>

@@ -91,10 +91,10 @@ onMounted(async () => {
 <template>
 	<div
 		ref="zoom"
-		class="will-change-transform bg-cover relative select-none"
+		class="relative bg-cover will-change-transform select-none"
 		:style="`width: ${MAP_IMAGE_SIZE.x}px; height: ${MAP_IMAGE_SIZE.y}px; background-image: url(/src/assets/map-small.png)`"
 	>
-		<div class="absolute z-10 top-0 left-0 w-full h-full">
+		<div class="absolute top-0 left-0 z-10 h-full w-full">
 			<PlayerDot
 				v-for="player in players"
 				:id="`dot-${player.userId}`"
@@ -104,7 +104,7 @@ onMounted(async () => {
 				@select="selectPlayer(player)"
 			/>
 		</div>
-		<picture class="overflow-hidden h-screen">
+		<picture class="h-screen overflow-hidden">
 			<source type="image/avif" srcset="/src/assets/map.avif" />
 			<img
 				ref="image"

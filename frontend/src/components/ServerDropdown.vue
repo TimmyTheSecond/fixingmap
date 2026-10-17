@@ -33,17 +33,15 @@ function toggleMenu() {
 </script>
 
 <template>
-	<div class="flex flex-col gap-1.5 w-64 text-lg">
+	<div class="flex w-64 flex-col gap-1.5 text-lg">
 		<button
-			class="flex items-center justify-between px-3 py-2 rounded-xl select-none bg-zinc-900/90 transition-colors duration-150 hover:bg-zinc-800/90"
+			class="flex items-center justify-between rounded-xl bg-zinc-900/90 px-3 py-2 transition-colors duration-150 select-none hover:bg-zinc-800/90"
 			@click="toggleMenu"
 		>
-			<div class="flex gap-2 items-center">
+			<div class="flex items-center gap-2">
 				{{ serverState.currentServer?.shortId ?? "All Servers" }}
-				<div class="flex gap-1 items-center text-base text-zinc-400">
-					{{
-						serverState.currentServer?.players.length ?? totalPlayerCount
-					}}
+				<div class="flex items-center gap-1 text-base text-zinc-400">
+					{{ serverState.currentServer?.players.length ?? totalPlayerCount }}
 					<!-- not outlined as it's too small -->
 					<Icon icon="material-symbols:group" />
 				</div>
@@ -60,17 +58,17 @@ function toggleMenu() {
 		>
 			<div
 				v-if="menuOpen"
-				class="flex flex-col w-full bg-zinc-900/90 rounded-xl"
+				class="flex w-full flex-col rounded-xl bg-zinc-900/90"
 			>
 				<input
 					v-model="filter"
 					ref="search"
-					class="flex flex-col pl-3.5 pr-2.5 py-2 w-full text placeholder:text-zinc-500 focus:outline-none"
+					class="text flex w-full flex-col py-2 pr-2.5 pl-3.5 placeholder:text-zinc-500 focus:outline-none"
 					type="text"
 					placeholder="Search..."
 				/>
-				<div class="w-full h-px bg-zinc-700"></div>
-				<div class="flex flex-col p-1 gap-0.5 w-full">
+				<div class="h-px w-full bg-zinc-700"></div>
+				<div class="flex w-full flex-col gap-0.5 p-1">
 					<ServerDropdownItem
 						label="All Servers"
 						:player-count="totalPlayerCount"

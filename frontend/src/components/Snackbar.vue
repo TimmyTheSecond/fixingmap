@@ -12,7 +12,7 @@ const { current } = useSnackbar();
 		leave-active-class="duration-300"
 	>
 		<div
-			class="flex px-4 py-3 rounded-2xl bg-zinc-900 text-zinc-200 items-center gap-2 text-xl ring-inset ring ring-white/10 transition-transform"
+			class="flex items-center gap-2 rounded-2xl bg-zinc-900 px-4 py-3 text-xl text-zinc-200 ring ring-white/10 transition-transform ring-inset"
 			v-if="current"
 		>
 			<Icon

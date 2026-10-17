@@ -25,7 +25,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 <template>
 	<div
 		:class="[
-			'flex absolute origin-[left_center] items-center group',
+			'group absolute flex origin-[left_center] items-center',
 			isMediumZoom ? 'gap-2' : 'gap-0',
 		]"
 		:style="`top: ${position.y}px; left: ${position.x - (SIZE / 2) * zoom}px; scale: ${zoom}; translate: 0 -50%;`"
@@ -35,13 +35,13 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 	>
 		<div
 			:class="[
-				'rounded-full size-9 border-4 border-zinc-950 group-hover:border-blue-500',
+				'size-9 rounded-full border-4 border-zinc-950 group-hover:border-blue-500',
 				selected ? 'outline-2 outline-blue-500' : '',
 			]"
 			:style="`scale: ${isMediumZoom || selected ? 1 : 0.5}; background-color: ${getPlayerColor(player)};`"
 		></div>
 		<div
-			class="flex flex-col px-1.5 py-1 rounded-lg text-lg bg-zinc-950/60"
+			class="flex flex-col rounded-lg bg-zinc-950/60 px-1.5 py-1 text-lg"
 			v-if="isMediumZoom || hovering"
 		>
 			<div
@@ -49,7 +49,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 					player.displayName !== player.username &&
 					(isSmallZoom || hovering || selected)
 				"
-				class="flex items-center gap-1 text-zinc-400 text-sm"
+				class="flex items-center gap-1 text-sm text-zinc-400"
 			>
 				<Icon icon="material-symbols:person-outline" class="text-base" />
 				{{ player.username }}
