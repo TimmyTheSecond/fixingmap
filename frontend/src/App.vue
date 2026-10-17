@@ -25,10 +25,10 @@ if (import.meta.env.DEV) {
 		<div class="fixed top-0 z-20 flex w-full justify-center p-4">
 			<Snackbar />
 		</div>
-		<div class="fixed top-0 left-0 z-20 flex gap-2 items-center p-4">
+		<div class="fixed top-0 left-0 z-20 flex gap-2 p-4">
 			<ServerDropdown />
 			<a
-				class="p-2 bg-zinc-900/90 hover:bg-zinc-800/90 rounded-xl cursor-pointer"
+				class="p-2 bg-zinc-900/90 hover:bg-zinc-800/90 rounded-xl cursor-pointer h-fit"
 				:href="joinUrl"
 			>
 				<Icon icon="material-symbols:arrow-outward" class="text-[28px]" />
