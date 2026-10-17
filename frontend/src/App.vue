@@ -3,6 +3,10 @@ import Map from "./components/Map.vue";
 import Snackbar from "./components/Snackbar.vue";
 import { useSnackbar } from "./composables/snackbar";
 const { show, dismiss } = useSnackbar();
+
+if (import.meta.env.DEV) {
+	document.title = "Dovedale Live Map (dev)";
+}
 </script>
 
 <template>
