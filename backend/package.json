@@ -1,0 +1,19 @@
+{
+	"name": "dovedale-map",
+	"scripts": {
+		"dev": "bun --watch server.ts",
+		"build": "bun run --cwd frontend build",
+		"start": "bun server.ts"
+	},
+	"dependencies": {
+		"@hono/bun": "^1.0.1",
+		"hono": "^4.13.13",
+		"zod": "^4.6.7"
+	},
+	"devDependencies": {
+		"@types/bun": "1.3.5",
+		"oxfmt": "^0.73.0",
+		"oxlint": "^1.88.0"
+	},
+	"packageManager": "bun@1.3.5"
+}
