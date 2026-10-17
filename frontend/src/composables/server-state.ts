@@ -25,8 +25,8 @@ const exampleServer2 = {
 
 export interface Server {
 	players: Player[];
-	shortId: string | null;
-	longId: string | null;
+	shortId: string;
+	longId: string;
 }
 
 export const useServerStore = defineStore("server", () => {
