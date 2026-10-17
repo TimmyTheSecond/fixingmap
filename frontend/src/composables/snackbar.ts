@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import type { Color } from "../utils/color";
 
-export const DEFAULT_DURATION_MS = 5000;
+export const DEFAULT_DURATION_MS = 2000;
 export const TRANSITION_DURATION_MS = 200;
 
 export interface SnackbarOptions {
@@ -13,27 +13,18 @@ export interface SnackbarOptions {
 	color: Color;
 	/** Provide -1 to be permanent until `dismiss()` is ran */
 	duration?: number;
-	visible: boolean;
 }
 
 const current = ref<SnackbarOptions | null>(null);
 
 export function useSnackbar() {
 	function dismiss() {
-		if (!current.value) return;
-		current.value.visible = false;
-
-		setTimeout(() => {
-			current.value = null;
-		}, TRANSITION_DURATION_MS);
+		current.value = null;
 	}
 
 	return {
 		show: (options: Omit<SnackbarOptions, "visible">) => {
-			current.value = {
-				...options,
-				visible: true,
-			};
+			current.value = options;
 
 			if (options?.duration !== -1) {
 				setTimeout(() => {
