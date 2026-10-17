@@ -16,9 +16,9 @@ export interface SnackbarOptions {
 	visible: boolean;
 }
 
-export function useSnackbar() {
-	const current = ref<SnackbarOptions | null>(null);
+const current = ref<SnackbarOptions | null>(null);
 
+export function useSnackbar() {
 	function dismiss() {
 		if (!current.value) return;
 		current.value.visible = false;
@@ -34,7 +34,6 @@ export function useSnackbar() {
 				...options,
 				visible: true,
 			};
-			console.log(current.value);
 
 			if (options?.duration !== -1) {
 				setTimeout(() => {

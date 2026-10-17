@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { watch } from "vue";
 import { useSnackbar } from "../composables/snackbar";
 import { Icon } from "@iconify/vue";
 const { current } = useSnackbar();
-watch(current, console.log);
 </script>
 
 <template>
