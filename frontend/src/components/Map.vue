@@ -110,7 +110,6 @@ onMounted(async () => {
 			/> -->
 			<PlayerDotGroup :players="players" :flip="false" :selected="false" />
 		</div>
-		players {{ players.length }}
 		<picture class="h-screen overflow-hidden">
 			<source type="image/avif" srcset="/src/assets/map.avif" />
 			<img
