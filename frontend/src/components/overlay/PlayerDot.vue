@@ -54,6 +54,8 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 				scale: selected ? 1 : dotScale,
 				backgroundColor: getPlayerColor(player),
 			}"
+			@mouseover="hovering = true"
+			@mouseout="hovering = false"
 		></div>
 		<div
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-1.5 py-1 text-lg"
