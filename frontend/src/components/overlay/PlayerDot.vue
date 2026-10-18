@@ -5,7 +5,7 @@ import { ImagePosition } from "../../utils/positions";
 import { useMapStore } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
 
-const SIZE = 32;
+const SIZE = 36;
 
 const mapState = useMapStore();
 
@@ -13,6 +13,7 @@ const emit = defineEmits<{ select: [] }>();
 const props = defineProps<{
 	player: Player;
 	selected: boolean;
+	flip: boolean;
 }>();
 
 const hovering = ref(false);
@@ -25,13 +26,15 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 <template>
 	<div
 		:class="[
-			'group absolute flex origin-[left_center] items-center',
+			'group absolute flex items-center',
 			isMediumZoom ? 'gap-2' : 'gap-0',
+			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
 			top: position.y,
-			left: position.x - (SIZE / 2) * zoom,
+			left: position.x + (flip ? 1 : -1) * (SIZE / 2) * zoom,
 			scale: zoom,
+			translate: `${flip ? '-100%' : '0'} -50%`,
 		}"
 		@mouseover="hovering = true"
 		@mouseout="hovering = false"
