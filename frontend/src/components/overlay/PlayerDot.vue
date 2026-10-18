@@ -31,8 +31,8 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
-			top: position.y,
-			left: position.x + (flip ? 1 : -1) * (SIZE / 2) * zoom,
+			top: position.y + 'px',
+			left: position.x + (flip ? 1 : -1) * (SIZE / 2) * zoom + 'px',
 			scale: zoom,
 			translate: `${flip ? '-100%' : '0'} -50%`,
 		}"

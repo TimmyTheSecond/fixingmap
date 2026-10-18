@@ -94,8 +94,8 @@ onMounted(async () => {
 		ref="zoom"
 		class="relative bg-cover will-change-transform select-none"
 		:style="{
-			width: MAP_IMAGE_SIZE.x,
-			height: MAP_IMAGE_SIZE.y,
+			width: MAP_IMAGE_SIZE.x + 'px',
+			height: MAP_IMAGE_SIZE.y + 'px',
 			backgroundImage: 'url(/src/assets/map-small.png)',
 		}"
 	>
