@@ -6,6 +6,8 @@ import { useMapStore } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
 
 const SIZE = 36;
+const MAX_SCALE_ZOOM = 0.6;
+const MINIMUM_SCALE = 0.5;
 
 const mapState = useMapStore();
 
@@ -15,6 +17,11 @@ const props = defineProps<{
 	selected: boolean;
 	flip: boolean;
 }>();
+
+const dotScale = computed(() => {
+	const proportionalScale = mapState.zoom / MAX_SCALE_ZOOM;
+	return Math.min(1, Math.max(MINIMUM_SCALE, proportionalScale));
+});
 
 const hovering = ref(false);
 const isMediumZoom = computed(() => mapState.zoom > 0.6);
@@ -36,8 +43,6 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			scale: zoom,
 			translate: `${flip ? '-100%' : '0'} -50%`,
 		}"
-		@mouseover="hovering = true"
-		@mouseout="hovering = false"
 		@click="emit('select')"
 	>
 		<div
@@ -46,7 +51,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 				selected ? 'outline-2 outline-blue-500' : '',
 			]"
 			:style="{
-				scale: isMediumZoom || selected ? 1 : 0.5,
+				scale: selected ? 1 : dotScale,
 				backgroundColor: getPlayerColor(player),
 			}"
 		></div>

@@ -7,6 +7,8 @@ import { useMapStore } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
 
 const SIZE = 36;
+const MAX_SCALE_ZOOM = 0.6;
+const MINIMUM_SCALE = 0.5;
 
 const mapState = useMapStore();
 const emit = defineEmits<{ select: [] }>();
@@ -26,6 +28,10 @@ const position = computed(() => {
 	);
 	return ImagePosition.fromWorld(averagePosition);
 });
+const dotScale = computed(() => {
+	const proportionalScale = mapState.zoom / MAX_SCALE_ZOOM;
+	return Math.min(1, Math.max(MINIMUM_SCALE, proportionalScale));
+});
 
 watch(props, () => {
 	if (props.players.length > 4)
@@ -37,7 +43,7 @@ watch(props, () => {
 	<div
 		:class="[
 			'group absolute flex items-center justify-center',
-			isMediumZoom ? 'gap-4' : 'gap-2',
+			isMediumZoom ? 'gap-4' : 'gap-0.5',
 			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
@@ -46,11 +52,14 @@ watch(props, () => {
 			scale: zoom,
 			translate: `${flip ? '-100%' : '0'} -50%`,
 		}"
-		@mouseover="hovering = true"
-		@mouseout="hovering = false"
 		@click="emit('select')"
 	>
-		<div class="flex size-8 flex-wrap gap-0">
+		<div
+			class="flex size-8 flex-wrap gap-0"
+			:style="{ scale: selected ? 1 : dotScale }"
+			@mouseover="hovering = true"
+			@mouseout="hovering = false"
+		>
 			<div
 				v-for="[index, player] in players.length > 4
 					? players.slice(0, 3).entries()
@@ -60,7 +69,6 @@ watch(props, () => {
 				<div
 					class="size-9 min-w-9 rounded-full border-4 border-zinc-950"
 					:style="{
-						scale: isMediumZoom || selected ? 1 : 0.5,
 						backgroundColor: getPlayerColor(player),
 						zIndex: index + 10,
 					}"
