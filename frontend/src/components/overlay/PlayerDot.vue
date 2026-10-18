@@ -4,12 +4,14 @@ import { getPlayerColor, type Player } from "../../utils/players";
 import { ImagePosition } from "../../utils/positions";
 import { useMapStore } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
+import { useServerStore } from "../../composables/server-state";
 
 const SIZE = 36;
 const MAX_SCALE_ZOOM = 0.6;
 const MINIMUM_SCALE = 0.5;
 
 const mapState = useMapStore();
+const serverState = useServerStore();
 
 const emit = defineEmits<{ select: [] }>();
 const props = defineProps<{
@@ -61,6 +63,13 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-1.5 py-1 text-lg"
 			v-if="isMediumZoom || hovering"
 		>
+			<div
+				v-if="serverState.currentServer && hovering"
+				class="flex items-center gap-1 text-sm text-zinc-400"
+			>
+				<Icon icon="material-symbols:dns-outline" class="text-base" />
+				{{ serverState.currentServer.shortId }}
+			</div>
 			<div
 				v-if="
 					player.displayName !== player.username &&
