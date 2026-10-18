@@ -1,0 +1,106 @@
+<script setup lang="ts">
+// TODO: abstract logic shared with PlayerDot
+import { computed, ref, watch } from "vue";
+import { getPlayerColor, type Player } from "../../utils/players";
+import { ImagePosition, Vector2 } from "../../utils/positions";
+import { useMapStore } from "../../composables/map-state";
+import { Icon } from "@iconify/vue";
+
+const SIZE = 36;
+
+const mapState = useMapStore();
+const emit = defineEmits<{ select: [] }>();
+const props = defineProps<{
+	players: Player[];
+	selected: boolean;
+	flip: boolean;
+}>();
+
+const hovering = ref(false);
+const isMediumZoom = computed(() => mapState.zoom > 0.6);
+const isSmallZoom = computed(() => mapState.zoom > 2);
+const zoom = computed(() => 1 / mapState.zoom);
+const position = computed(() => {
+	const averagePosition = Vector2.average(
+		props.players.map((player) => player.position),
+	);
+	return ImagePosition.fromWorld(averagePosition);
+});
+
+watch(props, () => {
+	if (props.players.length > 4)
+		throw new Error("Too many players passed to PlayerDotGroup");
+});
+</script>
+
+<template>
+	<div
+		:class="[
+			'group absolute flex items-center justify-center',
+			isMediumZoom ? 'gap-4' : 'gap-2',
+			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
+		]"
+		:style="{
+			top: position.y,
+			left: position.x + (flip ? 1 : -1) * (SIZE / 2) * zoom,
+			scale: zoom,
+			translate: `${flip ? '-100%' : '0'} -50%`,
+		}"
+		@mouseover="hovering = true"
+		@mouseout="hovering = false"
+		@click="emit('select')"
+	>
+		<div class="flex size-8 flex-wrap gap-0">
+			<div
+				v-for="[index, player] in players.length > 4
+					? players.slice(0, 3).entries()
+					: players.entries()"
+				class="flex size-4 items-center justify-center"
+			>
+				<div
+					class="size-9 min-w-9 rounded-full border-4 border-zinc-950"
+					:style="{
+						scale: isMediumZoom || selected ? 1 : 0.5,
+						backgroundColor: getPlayerColor(player),
+						zIndex: index + 10,
+					}"
+				></div>
+			</div>
+			<div
+				v-if="players.length > 4"
+				class="flex size-4 items-center justify-center"
+			>
+				<div
+					class="z-20 -m-2 flex size-9 min-w-9 items-center justify-center rounded-full bg-zinc-950/80 text-lg"
+				>
+					+{{ players.length - 3 }}
+				</div>
+			</div>
+		</div>
+		<div
+			v-if="isMediumZoom || hovering"
+			class="flex flex-col rounded-lg bg-zinc-950/60 px-2 py-1.5 text-lg"
+		>
+			<div
+				class="flex gap-2"
+				v-for="player in players.length > 4 ? players.slice(0, 3) : players"
+				:key="player.userId"
+			>
+				<p class="text-xl">{{ player.displayName }}</p>
+				<div
+					v-if="
+						player.displayName !== player.username &&
+						(isSmallZoom || hovering || selected)
+					"
+					class="flex items-center gap-1 text-sm text-zinc-400"
+				>
+					<Icon icon="material-symbols:person-outline" class="text-base" />
+					{{ player.username }}
+				</div>
+			</div>
+			<div v-if="players.length > 4" class="text-zinc-400">
+				+ {{ players.length - 3 }} others
+			</div>
+		</div>
+	</div>
+</template>

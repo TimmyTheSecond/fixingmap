@@ -7,6 +7,7 @@ import type { Player } from "../utils/players";
 import { ImagePosition } from "../utils/positions";
 import { useMapStore } from "../composables/map-state";
 import { useServerStore } from "../composables/server-state";
+import PlayerDotGroup from "./overlay/PlayerDotGroup.vue";
 
 const zoomElement = useTemplateRef<HTMLDivElement>("zoom");
 const imageElement = useTemplateRef<HTMLImageElement>("image");
@@ -99,15 +100,17 @@ onMounted(async () => {
 		}"
 	>
 		<div class="absolute top-0 left-0 z-10 h-full w-full">
-			<PlayerDot
-				v-for="player in players"
-				:id="`dot-${player.userId}`"
+			<!-- <PlayerDot
+				v-for="player in players.slice(0, 1)"
 				:player="player"
 				:key="player.userId"
 				:selected="mapState.selectedPlayer === player"
+				:flip="false"
 				@select="selectPlayer(player)"
-			/>
+			/> -->
+			<PlayerDotGroup :players="players" :flip="false" :selected="false" />
 		</div>
+		players {{ players.length }}
 		<picture class="h-screen overflow-hidden">
 			<source type="image/avif" srcset="/src/assets/map.avif" />
 			<img
