@@ -8,6 +8,7 @@ import { ImagePosition } from "../utils/positions";
 import { useMapStore } from "../composables/map-state";
 import { useServerStore } from "../composables/server-state";
 import PlayerDotGroup from "./overlay/PlayerDotGroup.vue";
+import { getPlayerGroups } from "../utils/map";
 
 const zoomElement = useTemplateRef<HTMLDivElement>("zoom");
 const imageElement = useTemplateRef<HTMLImageElement>("image");
@@ -22,6 +23,8 @@ const players = computed(
 			[],
 		),
 );
+
+const playerGroups = computed(() => getPlayerGroups(players.value));
 let panzoom: PanZoom | null = null;
 
 function zoomToImagePosition(position: ImagePosition) {
@@ -100,15 +103,21 @@ onMounted(async () => {
 		}"
 	>
 		<div class="absolute top-0 left-0 z-10 h-full w-full">
-			<!-- <PlayerDot
-				v-for="player in players.slice(0, 1)"
-				:player="player"
-				:key="player.userId"
-				:selected="mapState.selectedPlayer === player"
-				:flip="false"
-				@select="selectPlayer(player)"
-			/> -->
-			<PlayerDotGroup :players="players" :flip="false" :selected="false" />
+			<template v-for="group in playerGroups" :key="group.players[0].userId">
+				<PlayerDot
+					v-if="group.players.length === 1"
+					:player="group.players[0]"
+					:selected="mapState.selectedPlayer === group.players[0]"
+					:flip="group.flip"
+					@select="selectPlayer(group.players[0])"
+				/>
+				<PlayerDotGroup
+					v-else
+					:players="group.players"
+					:flip="group.flip"
+					:selected="false"
+				/>
+			</template>
 		</div>
 		<picture class="h-screen overflow-hidden">
 			<source type="image/avif" srcset="/src/assets/map.avif" />

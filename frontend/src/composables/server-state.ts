@@ -23,7 +23,7 @@ const examplePlayers: Player[] = [
 		displayName: "dgox_exdee",
 		userId: 3,
 		trains: {},
-		position: new Vector2(1201, 502),
+		position: new Vector2(1170, 502),
 	},
 	{
 		username: "dg0x_lol",
