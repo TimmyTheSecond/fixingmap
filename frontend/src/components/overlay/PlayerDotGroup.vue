@@ -32,11 +32,6 @@ const dotScale = computed(() => {
 	const proportionalScale = mapState.zoom / MAX_SCALE_ZOOM;
 	return Math.min(1, Math.max(MINIMUM_SCALE, proportionalScale));
 });
-
-watch(props, () => {
-	if (props.players.length > 4)
-		throw new Error("Too many players passed to PlayerDotGroup");
-});
 </script>
 
 <template>
@@ -55,7 +50,7 @@ watch(props, () => {
 		@click="emit('select')"
 	>
 		<div
-			class="flex size-8 flex-wrap gap-0"
+			class="flex size-8 flex-wrap items-center justify-center gap-0"
 			:style="{ scale: selected ? 1 : dotScale }"
 			@mouseover="hovering = true"
 			@mouseout="hovering = false"
@@ -91,7 +86,10 @@ watch(props, () => {
 		>
 			<div
 				class="flex gap-2"
-				v-for="player in players.length > 4 ? players.slice(0, 3) : players"
+				v-for="player in players.length > 4 &&
+				!(isSmallZoom || hovering || selected)
+					? players.slice(0, 3)
+					: players"
 				:key="player.userId"
 			>
 				<p class="text-xl">{{ player.displayName }}</p>
@@ -106,7 +104,10 @@ watch(props, () => {
 					{{ player.username }}
 				</div>
 			</div>
-			<div v-if="players.length > 4" class="text-zinc-400">
+			<div
+				v-if="players.length > 4 && !(isSmallZoom || hovering || selected)"
+				class="text-zinc-400"
+			>
 				+ {{ players.length - 3 }} others
 			</div>
 		</div>
