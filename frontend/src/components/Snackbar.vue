@@ -20,7 +20,7 @@ const { current } = useSnackbar();
 				:color="current?.color"
 				:class="['text-[22px]', current?.iconClass]"
 			/>
-			<p :style="`color: ${current?.color}`">{{ current?.text }}</p>
+			<p :style="{ color: current?.color }">{{ current?.text }}</p>
 		</div>
 	</Transition>
 </template>

@@ -28,7 +28,11 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			'group absolute flex origin-[left_center] items-center',
 			isMediumZoom ? 'gap-2' : 'gap-0',
 		]"
-		:style="`top: ${position.y}px; left: ${position.x - (SIZE / 2) * zoom}px; scale: ${zoom}; translate: 0 -50%;`"
+		:style="{
+			top: position.y,
+			left: position.x - (SIZE / 2) * zoom,
+			scale: zoom,
+		}"
 		@mouseover="hovering = true"
 		@mouseout="hovering = false"
 		@click="emit('select')"
@@ -38,7 +42,10 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 				'size-9 rounded-full border-4 border-zinc-950 group-hover:border-blue-500',
 				selected ? 'outline-2 outline-blue-500' : '',
 			]"
-			:style="`scale: ${isMediumZoom || selected ? 1 : 0.5}; background-color: ${getPlayerColor(player)};`"
+			:style="{
+				scale: isMediumZoom || selected ? 1 : 0.5,
+				backgroundColor: getPlayerColor(player),
+			}"
 		></div>
 		<div
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-1.5 py-1 text-lg"

@@ -92,7 +92,11 @@ onMounted(async () => {
 	<div
 		ref="zoom"
 		class="relative bg-cover will-change-transform select-none"
-		:style="`width: ${MAP_IMAGE_SIZE.x}px; height: ${MAP_IMAGE_SIZE.y}px; background-image: url(/src/assets/map-small.png)`"
+		:style="{
+			width: MAP_IMAGE_SIZE.x,
+			height: MAP_IMAGE_SIZE.y,
+			backgroundImage: 'url(/src/assets/map-small.png)',
+		}"
 	>
 		<div class="absolute top-0 left-0 z-10 h-full w-full">
 			<PlayerDot
