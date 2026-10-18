@@ -9,6 +9,22 @@ export class Vector2 {
 		this.x = x;
 		this.y = y;
 	}
+
+	static average(vectors: Vector2[]): Vector2 {
+		if (vectors.length === 0) {
+			throw new Error("Cannot average an empty array of vectors");
+		}
+
+		let totalX = 0;
+		let totalY = 0;
+
+		for (const vector of vectors) {
+			totalX += vector.x;
+			totalY += vector.y;
+		}
+
+		return new Vector2(totalX / vectors.length, totalY / vectors.length);
+	}
 }
 
 export class ImagePosition {
