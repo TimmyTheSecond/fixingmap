@@ -17,7 +17,7 @@ export interface Train {
 		carriageCount: number;
 		spawnedByUsername: string;
 	};
-	carriages: Carriage[];
+	carriages: Record<number, Carriage>;
 }
 
 export interface Player {

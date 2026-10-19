@@ -19,18 +19,18 @@ const examplePlayers: Player[] = [
 					carriageCount: 2,
 					spawnedByUsername: "dgox_xd",
 				},
-				carriages: [
-					{
-						position: new Vector2(1000, 500),
+				carriages: {
+					1: {
+						position: new Vector2(1140, 500),
 						size: new Vector2(63, 7),
-						rotation: 45,
+						rotation: 44,
 					},
-					{
+					2: {
 						position: new Vector2(1100, 520),
 						size: new Vector2(63, 7),
-						rotation: 45,
+						rotation: 30,
 					},
-				],
+				},
 			},
 		},
 		position: new Vector2(1231, 534),
