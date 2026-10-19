@@ -1,15 +1,9 @@
 import { PLAYER_COLORS } from "../constants";
 import type { Vector2 } from "./positions";
 
-export interface Vector3 {
-	x: number;
-	y: number;
-	z: number;
-}
-
 export interface Carriage {
-	position: Vector3;
-	size: Vector3;
+	position: Vector2;
+	size: Vector2;
 	rotation: number;
 }
 
@@ -21,7 +15,6 @@ export interface Train {
 		trainType: string;
 		trainSpeed: number;
 		carriageCount: number;
-		carriageAmount: number;
 		spawnedByUsername: string;
 	};
 	carriages: Carriage[];
