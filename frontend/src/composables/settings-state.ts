@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { z } from "zod";
 
 const settingsSchema = z.strictObject({
@@ -26,6 +26,7 @@ export const useSettingsStore = defineStore("settings", () => {
 	}
 
 	return {
+		showSettings: ref(false),
 		settings: reactive<Settings>(settings),
 		reset() {
 			Object.assign(defaultSettings, settings);
