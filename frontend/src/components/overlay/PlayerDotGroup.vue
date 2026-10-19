@@ -37,7 +37,7 @@ const dotScale = computed(() => {
 	<div
 		:class="[
 			'group absolute flex items-center justify-center',
-			mapZoom.zoomedIn ? 'gap-4' : 'gap-0.5',
+			mapZoom.zoomedIn.value ? 'gap-6' : 'gap-2',
 			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
@@ -80,13 +80,13 @@ const dotScale = computed(() => {
 			</div>
 		</div>
 		<div
-			v-if="mapZoom.zoomedIn || hovering"
+			v-if="mapZoom.zoomedIn.value || hovering"
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-2 py-1.5 text-lg"
 		>
 			<div
 				class="flex gap-2"
 				v-for="player in players.length > 4 &&
-				!(mapZoom.zoomedInFar || hovering || selected)
+				!(mapZoom.zoomedInFar.value || hovering || selected)
 					? players.slice(0, 3)
 					: players"
 				:key="player.userId"
@@ -95,7 +95,7 @@ const dotScale = computed(() => {
 				<div
 					v-if="
 						player.displayName !== player.username &&
-						(mapZoom.zoomedInFar || hovering || selected)
+						(mapZoom.zoomedInFar.value || hovering || selected)
 					"
 					class="flex items-center gap-1 text-sm text-zinc-400"
 				>
@@ -105,7 +105,8 @@ const dotScale = computed(() => {
 			</div>
 			<div
 				v-if="
-					players.length > 4 && !(mapZoom.zoomedInFar || hovering || selected)
+					players.length > 4 &&
+					!(mapZoom.zoomedInFar.value || hovering || selected)
 				"
 				class="text-zinc-400"
 			>

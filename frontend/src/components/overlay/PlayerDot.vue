@@ -36,7 +36,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 	<div
 		:class="[
 			'group absolute flex items-center',
-			mapZoom.zoomedIn ? 'gap-2' : 'gap-0',
+			mapZoom.zoomedIn.value ? 'gap-2' : 'gap-0',
 			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
@@ -61,7 +61,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 		></div>
 		<div
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-1.5 py-1 text-lg"
-			v-if="mapZoom.zoomedIn || hovering"
+			v-if="mapZoom.zoomedIn.value || hovering"
 		>
 			<div
 				v-if="serverState.currentServer && hovering"
@@ -73,7 +73,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			<div
 				v-if="
 					player.displayName !== player.username &&
-					(mapZoom.zoomedInFar || hovering || selected)
+					(mapZoom.zoomedInFar.value || hovering || selected)
 				"
 				class="flex items-center gap-1 text-sm text-zinc-400"
 			>
