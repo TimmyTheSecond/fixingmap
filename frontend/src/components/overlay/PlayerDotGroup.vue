@@ -3,13 +3,14 @@
 import { computed, ref, watch } from "vue";
 import { getPlayerColor, type Player } from "../../utils/players";
 import { ImagePosition, Vector2 } from "../../utils/positions";
-import { useMapStore } from "../../composables/map-state";
+import { useMapStore, useMapZoom } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
 
 const SIZE = 36;
 const MAX_SCALE_ZOOM = 0.6;
 const MINIMUM_SCALE = 0.5;
 
+const mapZoom = useMapZoom();
 const mapState = useMapStore();
 const emit = defineEmits<{ select: [] }>();
 const props = defineProps<{
@@ -19,8 +20,6 @@ const props = defineProps<{
 }>();
 
 const hovering = ref(false);
-const isMediumZoom = computed(() => mapState.zoom > 0.6);
-const isSmallZoom = computed(() => mapState.zoom > 2);
 const zoom = computed(() => 1 / mapState.zoom);
 const position = computed(() => {
 	const averagePosition = Vector2.average(
@@ -38,7 +37,7 @@ const dotScale = computed(() => {
 	<div
 		:class="[
 			'group absolute flex items-center justify-center',
-			isMediumZoom ? 'gap-4' : 'gap-0.5',
+			mapZoom.zoomedIn ? 'gap-4' : 'gap-0.5',
 			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
@@ -81,13 +80,13 @@ const dotScale = computed(() => {
 			</div>
 		</div>
 		<div
-			v-if="isMediumZoom || hovering"
+			v-if="mapZoom.zoomedIn || hovering"
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-2 py-1.5 text-lg"
 		>
 			<div
 				class="flex gap-2"
 				v-for="player in players.length > 4 &&
-				!(isSmallZoom || hovering || selected)
+				!(mapZoom.zoomedInFar || hovering || selected)
 					? players.slice(0, 3)
 					: players"
 				:key="player.userId"
@@ -96,7 +95,7 @@ const dotScale = computed(() => {
 				<div
 					v-if="
 						player.displayName !== player.username &&
-						(isSmallZoom || hovering || selected)
+						(mapZoom.zoomedInFar || hovering || selected)
 					"
 					class="flex items-center gap-1 text-sm text-zinc-400"
 				>
@@ -105,7 +104,9 @@ const dotScale = computed(() => {
 				</div>
 			</div>
 			<div
-				v-if="players.length > 4 && !(isSmallZoom || hovering || selected)"
+				v-if="
+					players.length > 4 && !(mapZoom.zoomedInFar || hovering || selected)
+				"
 				class="text-zinc-400"
 			>
 				+ {{ players.length - 3 }} others

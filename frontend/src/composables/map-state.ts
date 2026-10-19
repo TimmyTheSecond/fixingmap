@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { defineStore, storeToRefs } from "pinia";
+import { computed, reactive } from "vue";
 import type { Player } from "../utils/players";
 
 /**
@@ -11,3 +11,13 @@ export const useMapStore = defineStore("map", () => {
 		selectedPlayer: null,
 	});
 });
+
+export function useMapZoom() {
+	const { zoom } = storeToRefs(useMapStore());
+
+	return {
+		zoomedIn: computed(() => zoom.value > 0.6),
+		zoomedInFar: computed(() => zoom.value > 2),
+		zoom: zoom,
+	};
+}

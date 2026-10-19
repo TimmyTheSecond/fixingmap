@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 import { getPlayerColor, type Player } from "../../utils/players";
 import { ImagePosition } from "../../utils/positions";
-import { useMapStore } from "../../composables/map-state";
+import { useMapStore, useMapZoom } from "../../composables/map-state";
 import { Icon } from "@iconify/vue";
 import { useServerStore } from "../../composables/server-state";
 
@@ -10,6 +10,7 @@ const SIZE = 36;
 const MAX_SCALE_ZOOM = 0.6;
 const MINIMUM_SCALE = 0.5;
 
+const mapZoom = useMapZoom();
 const mapState = useMapStore();
 const serverState = useServerStore();
 
@@ -26,8 +27,7 @@ const dotScale = computed(() => {
 });
 
 const hovering = ref(false);
-const isMediumZoom = computed(() => mapState.zoom > 0.6);
-const isSmallZoom = computed(() => mapState.zoom > 2);
+
 const zoom = computed(() => 1 / mapState.zoom);
 const position = computed(() => ImagePosition.fromWorld(props.player.position));
 </script>
@@ -36,7 +36,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 	<div
 		:class="[
 			'group absolute flex items-center',
-			isMediumZoom ? 'gap-2' : 'gap-0',
+			mapZoom.zoomedIn ? 'gap-2' : 'gap-0',
 			flip ? 'origin-[right_center] flex-row-reverse' : 'origin-[left_center]',
 		]"
 		:style="{
@@ -61,7 +61,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 		></div>
 		<div
 			class="flex flex-col rounded-lg bg-zinc-950/60 px-1.5 py-1 text-lg"
-			v-if="isMediumZoom || hovering"
+			v-if="mapZoom.zoomedIn || hovering"
 		>
 			<div
 				v-if="serverState.currentServer && hovering"
@@ -73,7 +73,7 @@ const position = computed(() => ImagePosition.fromWorld(props.player.position));
 			<div
 				v-if="
 					player.displayName !== player.username &&
-					(isSmallZoom || hovering || selected)
+					(mapZoom.zoomedInFar || hovering || selected)
 				"
 				class="flex items-center gap-1 text-sm text-zinc-400"
 			>
