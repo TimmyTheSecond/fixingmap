@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { z } from "zod";
 
 const settingsSchema = z.strictObject({
@@ -25,6 +25,10 @@ export const useSettingsStore = defineStore("settings", () => {
 		} catch {}
 	}
 
+	watch(settings, () => {
+		localStorage.setItem("settings", JSON.stringify(settings));
+	});
+
 	return {
 		showSettings: ref(false),
 		settings: reactive<Settings>(settings),
@@ -32,9 +36,4 @@ export const useSettingsStore = defineStore("settings", () => {
 			Object.assign(defaultSettings, settings);
 		},
 	};
-});
-
-const store = useSettingsStore();
-store.$subscribe((_, state) => {
-	localStorage.setItem("settings", JSON.stringify(state));
 });
