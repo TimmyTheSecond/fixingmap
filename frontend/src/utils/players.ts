@@ -7,13 +7,13 @@ export interface Vector3 {
 	z: number;
 }
 
-export interface CarriageData {
+export interface Carriage {
 	position: Vector3;
 	size: Vector3;
 	rotation: number;
 }
 
-export interface TrainData {
+export interface Train {
 	data: {
 		destination: string;
 		trainClass: string;
@@ -24,7 +24,7 @@ export interface TrainData {
 		carriageAmount: number;
 		spawnedByUsername: string;
 	};
-	carriages: CarriageData[];
+	carriages: Carriage[];
 }
 
 export interface Player {
@@ -32,7 +32,7 @@ export interface Player {
 	displayName: string;
 	userId: number;
 	/** Indexed by carriage number (name) */
-	trains: Record<number, TrainData>;
+	trains: Record<number, Train>;
 	box?: {
 		name: string;
 		fullName: string;
@@ -40,7 +40,7 @@ export interface Player {
 	};
 
 	/** @deprecated `trains` should be used instead */
-	trainData?: TrainData["data"];
+	trainData?: Train["data"];
 	position: Vector2;
 }
 
