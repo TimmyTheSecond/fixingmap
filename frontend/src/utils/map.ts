@@ -5,10 +5,9 @@ import { ImagePosition } from "./positions";
 import type { Player } from "./players";
 import clustering from "density-clustering";
 
-const MERGE_DISTANCE_PIXELS = 9;
+const MERGE_DISTANCE_PIXELS = 8;
 const MAX_FLIP_DISTANCE_PIXELS = 180;
 const MAX_FLIP_VERTICAL_PIXELS = 10;
-const MINIMUM_PLAYERS_PER_GROUP = 1;
 
 const { width: windowWidth } = useWindowSize();
 
@@ -16,6 +15,7 @@ export function groupPlayers(players: Player[]) {
 	const mapState = useMapStore();
 	const screenPixelsPerImagePixel =
 		(windowWidth.value / MAP_IMAGE_SIZE.x) * mapState.zoom;
+	console.log(screenPixelsPerImagePixel);
 
 	const mergeDistanceImagePixels =
 		MERGE_DISTANCE_PIXELS / screenPixelsPerImagePixel;
@@ -25,7 +25,7 @@ export function groupPlayers(players: Player[]) {
 	});
 
 	return new clustering.DBSCAN()
-		.run(positions, mergeDistanceImagePixels, MINIMUM_PLAYERS_PER_GROUP)
+		.run(positions, mergeDistanceImagePixels, 1)
 		.map((indexes) =>
 			indexes
 				.map((index) => players[index])
@@ -67,12 +67,6 @@ export function calculateFlip(playerGroups: Player[][]) {
 			const verticalPixels =
 				Math.abs(other.y - group.y) * screenPixelsPerImagePixel;
 
-			console.log(
-				group.players.length,
-				other.players.length,
-				horizontalPixels,
-				verticalPixels,
-			);
 			return (
 				horizontalPixels >= 0 &&
 				horizontalPixels <= MAX_FLIP_DISTANCE_PIXELS &&

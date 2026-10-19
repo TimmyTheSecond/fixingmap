@@ -9,6 +9,8 @@ import { useMapStore } from "../composables/map-state";
 import { useServerStore } from "../composables/server-state";
 import PlayerDotGroup from "./overlay/PlayerDotGroup.vue";
 import { getPlayerGroups } from "../utils/map";
+import TrainCarriage from "./overlay/TrainCarriage.vue";
+import Train from "./overlay/Train.vue";
 
 const zoomElement = useTemplateRef<HTMLDivElement>("zoom");
 const imageElement = useTemplateRef<HTMLImageElement>("image");
@@ -118,6 +120,22 @@ onMounted(async () => {
 					:selected="false"
 				/>
 			</template>
+			<template v-for="[playerIndex, player] in Object.entries(players)">
+				<Train
+					v-for="[trainIndex, train] in Object.entries(player.trains)"
+					:key="trainIndex"
+					:show-info="trainIndex === '0'"
+					:train="train"
+					:player="player"
+				/>
+			</template>
+			<TrainCarriage
+				:player="players[0]"
+				:train="Object.values(players[0].trains)[0]"
+				:carriage-index="1"
+				:selected="false"
+				side="top"
+			/>
 		</div>
 		<picture class="h-screen overflow-hidden">
 			<source type="image/avif" srcset="/src/assets/map.avif" />

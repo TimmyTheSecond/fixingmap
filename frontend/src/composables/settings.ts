@@ -5,13 +5,15 @@ import { z } from "zod";
 const settingsSchema = z.strictObject({
 	showInfoOnZoom: z.boolean(),
 	showDetailsOnZoom: z.boolean(),
+	groupPlayers: z.boolean(),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
 
-const defaultSettings: Settings = {
+export const defaultSettings: Settings = {
 	showInfoOnZoom: true,
 	showDetailsOnZoom: true,
+	groupPlayers: true,
 };
 
 export const useSettingsStore = defineStore("settings", () => {

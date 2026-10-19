@@ -8,7 +8,31 @@ const examplePlayers: Player[] = [
 		username: "dgox_xd",
 		displayName: "Dog",
 		userId: 1,
-		trains: {},
+		trains: {
+			1: {
+				data: {
+					destination: "Fanory Mill",
+					trainClass: "Passenger",
+					headcode: "2G45",
+					trainType: "Class 456",
+					trainSpeed: 10,
+					carriageCount: 2,
+					spawnedByUsername: "dgox_xd",
+				},
+				carriages: [
+					{
+						position: new Vector2(1000, 500),
+						size: new Vector2(63, 7),
+						rotation: 45,
+					},
+					{
+						position: new Vector2(1100, 520),
+						size: new Vector2(63, 7),
+						rotation: 45,
+					},
+				],
+			},
+		},
 		position: new Vector2(1231, 534),
 	},
 	{
