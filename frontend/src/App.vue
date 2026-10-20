@@ -5,6 +5,7 @@ import ServerDropdown from "./components/ServerDropdown.vue";
 import Snackbar from "./components/Snackbar.vue";
 import { useServerStore } from "./composables/server-state";
 import { computed } from "vue";
+import Settings from "./components/settings/Settings.vue";
 const serverState = useServerStore();
 
 const joinUrl = computed(() => {
@@ -25,6 +26,7 @@ if (import.meta.env.DEV) {
 		<div class="fixed top-0 z-20 flex w-full justify-center p-4">
 			<Snackbar />
 		</div>
+
 		<div class="fixed top-0 left-0 z-20 flex gap-2 p-4">
 			<ServerDropdown />
 			<a
@@ -34,6 +36,8 @@ if (import.meta.env.DEV) {
 				<Icon icon="material-symbols:arrow-outward" class="text-[28px]" />
 			</a>
 		</div>
-		<Map class="fixed top-0 left-0 z-0" />
+
+		<Settings />
+		<Map class="fixed top-0 left-0" />
 	</div>
 </template>
