@@ -14,7 +14,6 @@ export const useMapStore = defineStore("map", () => {
 
 export function useMapZoom() {
 	const mapState = useMapStore();
-	console.log("store", useMapStore().zoom);
 	return {
 		zoomedIn: computed(() => mapState.zoom > 0.4),
 		zoomedInFar: computed(() => mapState.zoom > 2),

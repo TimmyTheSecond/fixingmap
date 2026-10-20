@@ -15,7 +15,6 @@ export function groupPlayers(players: Player[]) {
 	const mapState = useMapStore();
 	const screenPixelsPerImagePixel =
 		(windowWidth.value / MAP_IMAGE_SIZE.x) * mapState.zoom;
-	console.log(screenPixelsPerImagePixel);
 
 	const mergeDistanceImagePixels =
 		MERGE_DISTANCE_PIXELS / screenPixelsPerImagePixel;
