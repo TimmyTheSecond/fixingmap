@@ -3,14 +3,12 @@ import { computed, ref } from "vue";
 import { getPlayerColor, type Player, type Train } from "../../utils/players";
 import { ImagePosition } from "../../utils/positions";
 import { useMapStore, useMapZoom } from "../../composables/map-state";
-import { useServerStore } from "../../composables/server-state";
 
 const MAX_SCALE_ZOOM = 2;
 const MINIMUM_SCALE = 0.5;
 
 const mapZoom = useMapZoom();
 const mapState = useMapStore();
-const serverState = useServerStore();
 
 const emit = defineEmits<{ select: [] }>();
 const props = defineProps<{
@@ -22,7 +20,7 @@ const props = defineProps<{
 }>();
 const carriage = props.train.carriages[props.carriageIndex];
 
-const dotScale = computed(() => {
+const carriageScale = computed(() => {
 	const proportionalScale = mapState.zoom / MAX_SCALE_ZOOM;
 	return Math.min(1, Math.max(MINIMUM_SCALE, proportionalScale));
 });
@@ -44,7 +42,8 @@ const width = carriage.size.y;
 			left: position.x + 'px',
 			rotate: carriage.rotation + 'deg',
 			height: width,
-			// scale: zoom,
+			scale: carriageScale,
+			translate: '-50% -50%',
 		}"
 		@click="emit('select')"
 	>
