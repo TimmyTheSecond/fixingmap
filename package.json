@@ -18,5 +18,8 @@
 		"concurrently": "^10.0.6",
 		"oxfmt": "^0.73.0",
 		"oxlint": "^1.88.0"
+	},
+	"patchedDependencies": {
+		"panzoom@9.4.4": "patches/panzoom@9.4.4.patch"
 	}
 }

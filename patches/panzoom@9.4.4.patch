@@ -1,0 +1,21 @@
+diff --git a/index.d.ts b/index.d.ts
+index 8b0fa32201cb9c89ad34104735954a09ae8526c9..c45bff9634fe6d95ff958d3a21871f7be2ff89a4 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -38,14 +38,14 @@ declare module "panzoom" {
+     beforeMouseDown?: (e: MouseEvent) => void;
+     autocenter?: boolean;
+     onTouch?: (e: TouchEvent) => void;
+-    onDoubleClick?: (e: Event) => void;
++    onDoubleClick?: (e: MouseEvent) => void;
+ 
+     /**
+      * Called after user "clicks" with a single tap or mouse button. 
+      * The event comes a bit later after a tap, to allow for double
+      * tap disambiguation.
+      */
+-    onClick?: (e: Event) => void;
++    onClick?: (e: MouseEvent) => void;
+     smoothScroll?: boolean;
+     controller?: PanZoomController;
+     enableTextSelection?: boolean;

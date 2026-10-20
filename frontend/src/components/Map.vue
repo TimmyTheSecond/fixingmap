@@ -48,13 +48,22 @@ onMounted(async () => {
 	if (!zoomElement.value)
 		throw new Error("Could not find image or picture element");
 
+	function isOnButton(clientX: number, clientY: number): boolean {
+		const element = document.elementFromPoint(clientX, clientY);
+		return element !== null && element.closest("button, a[href]") !== null;
+	}
+
 	panzoom = createPanZoom(zoomElement.value, {
 		maxZoom: 10,
 		minZoom: 0.05,
 		initialZoom: 0.067,
 		smoothScroll: false,
-		beforeMouseDown() {
+		beforeMouseDown(event) {
 			mapState.selectedPlayer = null;
+			return isOnButton(event.clientX, event.clientY);
+		},
+		onDoubleClick(event) {
+			return isOnButton(event.clientX, event.clientY);
 		},
 		beforeWheel(event) {
 			if (!mapState.selectedPlayer) return false;
