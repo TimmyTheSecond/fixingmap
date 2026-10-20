@@ -14,7 +14,7 @@ const emit = defineEmits<{
 <template>
 	<button
 		:class="[
-			'flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors duration-150 hover:bg-zinc-700/50',
+			'flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-1.5 transition-colors duration-150 hover:bg-zinc-700/50',
 			selected ? 'bg-zinc-700/80' : '',
 		]"
 		@click="emit('click')"

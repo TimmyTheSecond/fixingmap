@@ -35,7 +35,7 @@ function toggleMenu() {
 <template>
 	<div class="flex w-64 flex-col gap-1.5 text-lg">
 		<button
-			class="flex items-center justify-between rounded-xl bg-zinc-900/90 px-3 py-2 transition-colors duration-150 select-none hover:bg-zinc-800/90"
+			class="flex cursor-pointer items-center justify-between rounded-xl bg-zinc-900/90 px-3 py-2 transition-colors duration-150 select-none hover:bg-zinc-800/90"
 			@click="toggleMenu"
 		>
 			<div class="flex items-center gap-2">
