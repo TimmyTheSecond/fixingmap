@@ -19,6 +19,20 @@ const MAP_CONFIG = {
     totalHeight: 12061,
 };
 
+const API_ORIGIN =
+    window.location.hostname.endsWith("github.io")
+        ? "https://map.dovedale.uk"
+        : window.location.origin;
+
+const getWebSocketUrl = () => {
+    const wsHost =
+        window.location.hostname.endsWith("github.io")
+            ? "map.dovedale.uk"
+            : window.location.host;
+    const protocol = window.location.protocol === "http:" ? "ws://" : "wss://";
+    return `${protocol}${wsHost}/api/ws`;
+};
+
 const AREA_MARKERS = {
     "Gleethrop End": {
         x: -1502,
@@ -305,9 +319,6 @@ const trackTransforms = () => {
     };
     const originalSetTransform = context.setTransform.bind(context);
 
-    // The native canvas transform is always dpr * transform, so every
-    // pan/zoom op (tracked in CSS-pixel space, DPR-agnostic) still renders
-    // crisp on high-DPI screens without the tracked matrix knowing about DPR.
     const applyNativeTransform = () => {
         originalSetTransform(
             dpr * transform.a,
@@ -396,7 +407,6 @@ const getPlayerAtPosition = (canvasX, canvasY) => {
             0.3,
             1 / Math.pow(state.currentScale, 0.4),
         );
-        // trains scale with zoom; dots are kept small via scaleFactor
         const hitRadius = player.trainData
             ? Math.max(
                   5,
@@ -477,7 +487,6 @@ const updateTooltip = (player, isPinned = false) => {
         tooltipElements.server.style.display = "none";
     }
 
-    // Position tooltip at current display (interpolated) position
     const tooltipDisplayPos = getDisplayPosition(
         getPlayerId(player),
         player.position ?? { x: 0, y: 0 },
@@ -597,7 +606,7 @@ const startStaleServerCleanup = () => {
         clearInterval(state.staleCheckInterval);
     }
     console.log("Starting stale server cleanup loop");
-    state.staleCheckInterval = setInterval(cleanupStaleServers, 5000); // every 5s
+    state.staleCheckInterval = setInterval(cleanupStaleServers, 5000);
 };
 
 const stopStaleServerCleanup = () => {
@@ -619,10 +628,7 @@ const createWebSocket = () => {
         state.ws = null;
     }
 
-    state.ws = new WebSocket(
-      (location.protocol == "http:" ? "ws://" : "wss://") +
-        `${window.location.host}/api/ws`,
-    );
+    state.ws = new WebSocket(getWebSocketUrl());
 
     state.ws.addEventListener("open", () => {
         console.log("WebSocket connected");
@@ -664,7 +670,6 @@ const createWebSocket = () => {
                         state.positionBuffer[uid] = [];
 
                     if (isTeleport) {
-                        // Clear buffer on teleport so we don't interpolate across the jump
                         state.positionBuffer[uid] = [
                             { x: toX, y: toY, t: now - BUFFER_DELAY },
                         ];
@@ -675,7 +680,6 @@ const createWebSocket = () => {
                             y: toY,
                             t: now,
                         });
-                        // Keep only entries within the last 10 seconds
                         const cutoff = now - 10000;
                         state.positionBuffer[uid] = state.positionBuffer[
                             uid
@@ -1031,7 +1035,6 @@ const drawScene = () => {
         const radius = baseRadius * dotScaleFactor;
 
         if (player.trainData) {
-            // derive angle from the buffer segment currently being rendered
             let markerAngle =
                 state.previousPlayerPosition[uid]?.angle ?? 0;
             const buf = state.positionBuffer[uid];
@@ -1041,7 +1044,6 @@ const drawScene = () => {
                     if (buf[i].t <= renderTime && renderTime < buf[i + 1].t) {
                         const dx = buf[i + 1].x - buf[i].x;
                         const dy = buf[i + 1].y - buf[i].y;
-                        // take care of "disco trains" require minimum distance to change angle
                         if (dx * dx + dy * dy > 1) {
                             markerAngle = Math.atan2(dy, dx);
                             if (state.previousPlayerPosition[uid]) {
@@ -1053,9 +1055,6 @@ const drawScene = () => {
                 }
             }
 
-            // DRAW TRAIN
-            //  check train.svg. can't access the DOM of a svg within a <img>, but want to be able to dynamically color.
-            //  draw the train by hand!
             const trainMarkerDim = { x: 12, y: 6 };
             const trainScale = isPinned || isHovered ? 0.5 : 0.4;
             context.translate(canvasPosition.x, canvasPosition.y);
@@ -1063,15 +1062,15 @@ const drawScene = () => {
             context.scale(trainScale, trainScale);
             context.translate(-trainMarkerDim.x / 2, -trainMarkerDim.y / 2);
             context.fillStyle = getPlayerColor(name);
-            context.fill(TRAIN_PATH.body); // BODY
+            context.fill(TRAIN_PATH.body);
             context.fillStyle = "#00000020";
-            context.fill(TRAIN_PATH.hood); // HOOD
+            context.fill(TRAIN_PATH.hood);
             context.strokeStyle = "#000080";
             context.lineWidth = 1;
-            context.stroke(TRAIN_PATH.window); // WINDOW
+            context.stroke(TRAIN_PATH.window);
             context.strokeStyle = isPinned || isHovered ? "white" : "black";
             context.lineWidth = 1;
-            context.stroke(TRAIN_PATH.outline); // OUTLINE
+            context.stroke(TRAIN_PATH.outline);
             context.translate(trainMarkerDim.x / 2, trainMarkerDim.y / 2);
             context.scale(1 / trainScale, 1 / trainScale);
             context.rotate(-markerAngle);
@@ -1133,7 +1132,6 @@ const drawScene = () => {
         }
     });
 
-    // Update tooltip position if a player is pinned
     if (state.pinnedPlayer) {
         const pinnedStillExists = playersToShow.find(
             (p) => p.username === state.pinnedPlayer.username,
@@ -1191,8 +1189,8 @@ const drawScene = () => {
 
 const getTileUrl = (row, column, quality) => {
     const tileName = `row-${row + 1}-column-${column + 1}`;
-    if (quality === "high") return `/images/${tileName}.png?v=1`;
-    return `/images/generated/${tileName}-${quality}.webp`;
+    if (quality === "high") return `${API_ORIGIN}/images/${tileName}.png?v=1`;
+    return `${API_ORIGIN}/images/generated/${tileName}-${quality}.webp`;
 };
 
 const loadMapImages = () => {
@@ -1326,7 +1324,6 @@ const handleMouseEvents = () => {
                 }
                 drawScene();
             } else if (state.pinnedPlayer) {
-                // Clicked empty space, unpin
                 state.pinnedPlayer = null;
                 state.followMode = false;
                 elements.tooltip.classList.add("hidden");
@@ -1519,7 +1516,6 @@ const start = () => {
         '<option value="all">All Servers (0 players)</option>';
     createWebSocket();
     if (window.location !== window.parent.location) {
-        // iframe ie wiki main page
         elements.popOutBtn.classList.remove("hidden");
     }
 };
