@@ -15,9 +15,9 @@ const MAP_CONFIG = {
     totalWidth: 19366,
     totalHeight: 12061,
 };
-const BACKEND_ORIGIN = "map.dovedale.uk";
+const BACKEND_ORIGIN = "https://map.dovedale.uk";
 const API_ORIGIN = BACKEND_ORIGIN;
-const getWebSocketUrl = () => `wss://${BACKEND_ORIGIN}/api/ws`;
+const getWebSocketUrl = () => BACKEND_ORIGIN.replace(/^https?/, "wss") + "/api/ws";
 const AREA_MARKERS = {
     "Gleethrop End": { x: -1502, y: 7910 },
     Groenewoud: { x: -14658, y: -3762 },
