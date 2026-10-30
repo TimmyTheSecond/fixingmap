@@ -48,7 +48,9 @@ const requestSchema = z.strictObject({
 
 const app = new Hono();
 const PORT = process.env.PORT || 3000;
-const STALE_SERVER_TIMEOUT = 30_000;
+// Roblox servers can report with long gaps between updates, so 30s is too aggressive.
+// Keep a server visible for a few minutes to avoid flicker when the next heartbeat arrives.
+const STALE_SERVER_TIMEOUT = 120_000;
 
 const ROBLOX_TOKEN = process.env.ROBLOX_OTHER_KEY;
 if (!ROBLOX_TOKEN) throw new Error(`Token environment variable is missing`);
