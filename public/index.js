@@ -19,7 +19,7 @@ const MAP_CONFIG = {
     totalHeight: 12061,
 };
 
-const BACKEND_ORIGIN = "https://map.dovedale.uk";
+const BACKEND_ORIGIN = "map.dovedale.uk";
 const API_ORIGIN = BACKEND_ORIGIN;
 
 const getWebSocketUrl = () => `${BACKEND_ORIGIN.replace(/^http/, "wss")}/api/ws`;
