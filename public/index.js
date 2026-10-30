@@ -2,28 +2,22 @@ const WORLD_BOUNDS = {
     TOP_LEFT: { x: -23818, y: -10426 },
     BOTTOM_RIGHT: { x: 14911, y: 13693 },
 };
-
 const WORLD_WIDTH = WORLD_BOUNDS.BOTTOM_RIGHT.x - WORLD_BOUNDS.TOP_LEFT.x;
 const WORLD_HEIGHT = WORLD_BOUNDS.BOTTOM_RIGHT.y - WORLD_BOUNDS.TOP_LEFT.y;
 const WORLD_CENTER = {
     x: (WORLD_BOUNDS.TOP_LEFT.x + WORLD_BOUNDS.BOTTOM_RIGHT.x) / 2,
     y: (WORLD_BOUNDS.TOP_LEFT.y + WORLD_BOUNDS.BOTTOM_RIGHT.y) / 2,
 };
-
 const STALE_SERVER_TIMEOUT = 30_000;
-
 const MAP_CONFIG = {
     rows: 1,
     columns: 16,
     totalWidth: 19366,
     totalHeight: 12061,
 };
-
 const BACKEND_ORIGIN = "map.dovedale.uk";
 const API_ORIGIN = BACKEND_ORIGIN;
-
-const getWebSocketUrl = () => `${BACKEND_ORIGIN.replace(/^http/, "wss")}/api/ws`;
-
+const getWebSocketUrl = () => `wss://${BACKEND_ORIGIN}/api/ws`;
 const AREA_MARKERS = {
     "Gleethrop End": { x: -1502, y: 7910 },
     Groenewoud: { x: -14658, y: -3762 },
@@ -46,7 +40,6 @@ const AREA_MARKERS = {
     "Westwood Park": { x: 1513, y: 3414 },
     "Wington Quarry": { x: 2676, y: -3410 },
 };
-
 const COLORS = [
     "#FD2943",
     "#01A2FF",
@@ -57,7 +50,6 @@ const COLORS = [
     "#E8BAC8",
     "#D7C59A",
 ];
-
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const elements = {
@@ -72,7 +64,6 @@ const elements = {
     qualitySelect: document.getElementById("quality"),
     popOutBtn: document.getElementById("pop-out"),
 };
-
 const tooltipElements = {
     playerName: elements.tooltip.querySelector("#player div"),
     playerSection: elements.tooltip.querySelector("#player"),
@@ -88,7 +79,6 @@ const tooltipElements = {
     server: elements.tooltip.querySelector("#server"),
     serverDiv: elements.tooltip.querySelector("#server div"),
 };
-
 class AppState {
     constructor() {
         this.serverData = {};
@@ -119,7 +109,6 @@ class AppState {
         this.animationFrameId = null;
         this.followMode = false;
     }
-
     getAllPlayers() {
         if (this.currentServer === "all") {
             return Object.values(this.serverData)
@@ -129,9 +118,7 @@ class AppState {
         return this.serverData[this.currentServer]?.players || [];
     }
 }
-
 const state = new AppState();
-
 const resizeCanvas = (cssWidth, cssHeight) => {
     const dpr = window.devicePixelRatio || 1;
     state.viewWidth = cssWidth;
@@ -142,7 +129,6 @@ const resizeCanvas = (cssWidth, cssHeight) => {
     canvas.style.height = `${cssHeight}px`;
     context.setDevicePixelRatio(dpr);
 };
-
 const getCanvasCoordinates = (event) => {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -150,13 +136,11 @@ const getCanvasCoordinates = (event) => {
         y: event.clientY - rect.top,
     };
 };
-
 const getDistanceBetweenTouches = (touches) => {
     const distanceX = touches[0].clientX - touches[1].clientX;
     const distanceY = touches[0].clientY - touches[1].clientY;
     return Math.hypot(distanceX, distanceY);
 };
-
 const getPlayerColor = (name) => {
     if (!name) return "#00FFFF";
     let value = 0;
@@ -169,7 +153,6 @@ const getPlayerColor = (name) => {
     const colorIndex = ((value % COLORS.length) + COLORS.length) % COLORS.length;
     return COLORS[colorIndex];
 };
-
 const worldToCanvas = (worldX, worldY) => {
     const relativeX = (worldX - WORLD_BOUNDS.TOP_LEFT.x) / WORLD_WIDTH;
     const relativeY = (worldY - WORLD_BOUNDS.TOP_LEFT.y) / WORLD_HEIGHT;
@@ -188,7 +171,6 @@ const worldToCanvas = (worldX, worldY) => {
         y: offsetY + relativeY * scaledMapHeight,
     };
 };
-
 const canvasToWorld = (canvasX, canvasY) => {
     const mapAspectRatio = MAP_CONFIG.totalWidth / MAP_CONFIG.totalHeight;
     const canvasAspectRatio = state.viewWidth / state.viewHeight;
@@ -207,7 +189,6 @@ const canvasToWorld = (canvasX, canvasY) => {
         y: WORLD_BOUNDS.TOP_LEFT.y + relativeY * WORLD_HEIGHT,
     };
 };
-
 function drawRoundedRectangle(context, x, y, width, height, radius) {
     if (width < 2 * radius) radius = width / 2;
     if (height < 2 * radius) radius = height / 2;
@@ -219,7 +200,6 @@ function drawRoundedRectangle(context, x, y, width, height, radius) {
     context.arcTo(x, y, x + width, y, radius);
     context.closePath();
 }
-
 const trackTransforms = () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let transform = svg.createSVGMatrix();
@@ -275,7 +255,6 @@ const trackTransforms = () => {
         return point.matrixTransform(transform.inverse());
     };
 };
-
 const zoomAt = (screenX, screenY, scaleFactor) => {
     const point = context.transformedPoint(screenX, screenY);
     context.translate(point.x, point.y);
@@ -283,7 +262,6 @@ const zoomAt = (screenX, screenY, scaleFactor) => {
     context.translate(-point.x, -point.y);
     drawScene();
 };
-
 const getPlayerAtPosition = (canvasX, canvasY) => {
     const playersToCheck = state.getAllPlayers();
     for (const player of playersToCheck) {
@@ -301,16 +279,13 @@ const getPlayerAtPosition = (canvasX, canvasY) => {
     }
     return null;
 };
-
 const updateTooltip = (player, isPinned = false) => {
     if (!player) {
         elements.tooltip.classList.add("hidden");
         return;
     }
-
     const name = player.username ?? "Unknown";
     if (tooltipElements.playerName) tooltipElements.playerName.textContent = name;
-
     if (player.trainData && Object.keys(player.trainData).length > 0) {
         const { destination, trainClass, headcode, trainSpeed } = player.trainData;
         if (destination && destination !== "Unknown") {
@@ -319,37 +294,31 @@ const updateTooltip = (player, isPinned = false) => {
         } else if (tooltipElements.destination) {
             tooltipElements.destination.style.display = "none";
         }
-
         if (trainClass && trainClass !== "Unknown") {
             if (tooltipElements.trainClassDiv) tooltipElements.trainClassDiv.textContent = trainClass;
             if (tooltipElements.trainClass) tooltipElements.trainClass.style.display = "flex";
         } else if (tooltipElements.trainClass) {
             tooltipElements.trainClass.style.display = "none";
         }
-
         if (headcode && headcode !== "----" && headcode !== "") {
             if (tooltipElements.headcodeDiv) tooltipElements.headcodeDiv.textContent = headcode;
             if (tooltipElements.headcode) tooltipElements.headcode.style.display = "flex";
         } else if (tooltipElements.headcode) {
             tooltipElements.headcode.style.display = "none";
         }
-
         if (typeof trainSpeed === "number") {
             if (tooltipElements.speedDiv) tooltipElements.speedDiv.textContent = `${Math.round(trainSpeed)} mph`;
             if (tooltipElements.speed) tooltipElements.speed.style.display = "flex";
         } else if (tooltipElements.speed) {
             tooltipElements.speed.style.display = "none";
         }
-
         if (tooltipElements.trainName) tooltipElements.trainName.style.display = "none";
     } else {
         [tooltipElements.destination, tooltipElements.trainName, tooltipElements.headcode, tooltipElements.trainClass, tooltipElements.speed].forEach((el) => {
             if (el) el.style.display = "none";
         });
     }
-
     if (tooltipElements.playerSection) tooltipElements.playerSection.style.display = "flex";
-
     if (tooltipElements.server && state.currentServer === "all") {
         if (tooltipElements.serverDiv) {
             let serverName = "Unknown";
@@ -365,7 +334,6 @@ const updateTooltip = (player, isPinned = false) => {
     } else if (tooltipElements.server) {
         tooltipElements.server.style.display = "none";
     }
-
     const tooltipDisplayPos = getDisplayPosition(getPlayerId(player), player.position ?? { x: 0, y: 0 });
     const baseCanvasPosition = worldToCanvas(tooltipDisplayPos.x, tooltipDisplayPos.y);
     const transform = context.getTransform();
@@ -392,7 +360,6 @@ const updateTooltip = (player, isPinned = false) => {
         elements.tooltip.style.boxShadow = "";
     }
 };
-
 let resizeTimeout = null;
 const handleWindowResize = () => {
     if (resizeTimeout) clearTimeout(resizeTimeout);
@@ -413,7 +380,6 @@ const handleWindowResize = () => {
     }, 16);
     drawScene();
 };
-
 const cleanupStaleServers = () => {
     const now = Date.now();
     let hasStaleServers = false;
@@ -429,13 +395,11 @@ const cleanupStaleServers = () => {
         drawScene();
     }
 };
-
 const startStaleServerCleanup = () => {
     if (state.staleCheckInterval) clearInterval(state.staleCheckInterval);
     console.log("Starting stale server cleanup loop");
     state.staleCheckInterval = setInterval(cleanupStaleServers, 5000);
 };
-
 const stopStaleServerCleanup = () => {
     if (state.staleCheckInterval) {
         console.log("Stopping stale server cleanup loop");
@@ -443,7 +407,6 @@ const stopStaleServerCleanup = () => {
         state.staleCheckInterval = null;
     }
 };
-
 const createWebSocket = () => {
     if (state.reconnectTimeout) {
         clearTimeout(state.reconnectTimeout);
@@ -517,13 +480,11 @@ const createWebSocket = () => {
     });
     return state.ws;
 };
-
 const showConnectionPopup = () => {
     elements.connectionPopup.classList.remove("opacity-0", "-translate-y-5", "pointer-events-none");
     elements.connectionPopup.classList.add("opacity-100", "translate-y-0");
     updateReconnectButton();
 };
-
 const hideConnectionPopup = () => {
     elements.connectionPopup.classList.add("opacity-0", "-translate-y-5", "pointer-events-none");
     elements.connectionPopup.classList.remove("opacity-100", "translate-y-0");
@@ -537,7 +498,6 @@ const hideConnectionPopup = () => {
     Reconnect
   `;
 };
-
 const updateReconnectButton = () => {
     if (state.reconnectAttempts >= state.maxReconnectAttempts) {
         elements.reconnectBtn.innerHTML = `
@@ -549,7 +509,6 @@ const updateReconnectButton = () => {
         elements.reconnectBtn.classList.add("bg-blue-600", "hover:bg-blue-700");
     }
 };
-
 const attemptReconnect = () => {
     if (state.reconnectTimeout) return;
     if (state.reconnectAttempts >= state.maxReconnectAttempts) {
@@ -567,7 +526,6 @@ const attemptReconnect = () => {
     if (state.ws && state.ws.readyState !== WebSocket.CLOSED) state.ws.close();
     createWebSocket();
 };
-
 const resetReconnection = () => {
     state.reconnectAttempts = 0;
     if (state.reconnectTimeout) {
@@ -575,7 +533,6 @@ const resetReconnection = () => {
         state.reconnectTimeout = null;
     }
 };
-
 const updateServerList = (data = null) => {
     if (data?.players) {
         const playersArray = Array.isArray(data.players) ? data.players : [];
@@ -632,11 +589,9 @@ const updateServerList = (data = null) => {
         state.currentServer = "all";
     }
 };
-
 const TELEPORT_THRESHOLD = 1500;
 const BUFFER_DELAY = 2600;
 const getPlayerId = (player) => String(player.userId ?? player.username ?? "unknown");
-
 const getDisplayPosition = (userId, fallback) => {
     const buffer = state.positionBuffer[userId];
     if (!buffer || buffer.length === 0) return fallback;
@@ -657,7 +612,6 @@ const getDisplayPosition = (userId, fallback) => {
     }
     return fallback;
 };
-
 const startAnimationLoop = () => {
     if (state.animationFrameId !== null) return;
     const tick = () => {
@@ -670,16 +624,13 @@ const startAnimationLoop = () => {
     };
     state.animationFrameId = requestAnimationFrame(tick);
 };
-
 const TRAIN_PATH = {
     body: new Path2D("M1 1 l10 0 l1 2 l-1 2 l-10 0 Z"),
     hood: new Path2D("M8.5 1 l2 0 l1 2 l-1 2 l-2 0 l1,-2Z"),
     window: new Path2D("M8.5 1 l 1,2 l -1,2"),
     outline: new Path2D("M1 1 l10 0 l1 2 l-1 2 l-10 0 Z"),
 };
-
 const FOLLOW_LERP = 0.12;
-
 const drawScene = () => {
     if (state.followMode && state.pinnedPlayer) {
         const allPlayers = state.getAllPlayers();
@@ -699,12 +650,10 @@ const drawScene = () => {
             }
         }
     }
-
     context.save();
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.restore();
-
     const mapAspectRatio = MAP_CONFIG.totalWidth / MAP_CONFIG.totalHeight;
     const canvasAspectRatio = state.viewWidth / state.viewHeight;
     const scaleFactor =
@@ -720,7 +669,6 @@ const drawScene = () => {
     const scaledChunkWidth = chunkWidth * scaleFactor;
     const scaledChunkHeight = chunkHeight * scaleFactor;
     context.imageSmoothingEnabled = false;
-
     for (let row = 0; row < MAP_CONFIG.rows; row++) {
         for (let column = 0; column < MAP_CONFIG.columns; column++) {
             const image = state.mapImages[row]?.[column];
@@ -745,7 +693,6 @@ const drawScene = () => {
         }
     }
     context.imageSmoothingEnabled = true;
-
     const playersToShow = state.getAllPlayers();
     elements.players.textContent = `Players: ${playersToShow.length}`;
     const dotScaleFactor = Math.max(0.3, 1 / Math.pow(state.currentScale, 0.4));
@@ -763,7 +710,6 @@ const drawScene = () => {
         const isHovered = state.hoveredPlayer?.username === name;
         const baseRadius = isPinned || isHovered ? 2.5 : 2;
         const radius = baseRadius * dotScaleFactor;
-
         if (player.trainData) {
             let markerAngle = state.previousPlayerPosition[uid]?.angle ?? 0;
             const buf = state.positionBuffer[uid];
@@ -811,7 +757,6 @@ const drawScene = () => {
             context.lineWidth = Math.max((isPinned || isHovered ? 0.7 : 0.4) * scaleFactor, 0.25);
             context.stroke();
         }
-
         const teleport = state.playerTeleport[uid];
         if (teleport) {
             const RIPPLE_DURATION = 700;
@@ -830,7 +775,6 @@ const drawScene = () => {
             }
         }
     });
-
     const activeSet = new Set(activePlayerIds);
     Object.keys(state.positionBuffer).forEach((id) => {
         if (!activeSet.has(id)) {
@@ -840,7 +784,6 @@ const drawScene = () => {
             delete state.playerTeleport[id];
         }
     });
-
     if (state.pinnedPlayer) {
         const pinnedStillExists = playersToShow.find((p) => p.username === state.pinnedPlayer.username);
         if (pinnedStillExists) {
@@ -850,7 +793,6 @@ const drawScene = () => {
             elements.tooltip.classList.add("hidden");
         }
     }
-
     if (state.currentScale > 300) return;
     const markerFontSize = Math.max(0.2, 10 / Math.pow(state.currentScale, 0.3));
     Object.entries(AREA_MARKERS).forEach(([name, { x, y }]) => {
@@ -878,13 +820,11 @@ const drawScene = () => {
         context.fillText(name, position.x - textWidth / 2, boxY + padY + ascent);
     });
 };
-
 const getTileUrl = (row, column, quality) => {
     const tileName = `row-${row + 1}-column-${column + 1}`;
     if (quality === "high") return `${API_ORIGIN}/images/${tileName}.png?v=1`;
     return `${API_ORIGIN}/images/generated/${tileName}-${quality}.webp`;
 };
-
 const loadMapImages = () => {
     const loadId = ++state.mapLoadId;
     const needsInit = state.mapImages.length === 0;
@@ -916,14 +856,12 @@ const loadMapImages = () => {
         }
     }
 };
-
 const initializeMap = () => {
     resizeCanvas(window.innerWidth, window.innerHeight);
     const canvasCenter = worldToCanvas(WORLD_CENTER.x, WORLD_CENTER.y);
     context.translate(window.innerWidth / 2 - canvasCenter.x, window.innerHeight / 2 - canvasCenter.y);
     drawScene();
 };
-
 const handleMouseEvents = () => {
     canvas.addEventListener("mousedown", (event) => {
         const mousePosition = getCanvasCoordinates(event);
@@ -932,7 +870,6 @@ const handleMouseEvents = () => {
         state.isDragging = true;
         return false;
     });
-
     canvas.addEventListener("mousemove", (event) => {
         if (state.isDragging) {
             state.followMode = false;
@@ -958,7 +895,6 @@ const handleMouseEvents = () => {
             }
         }
     });
-
     canvas.addEventListener("mouseleave", () => {
         state.isDragging = false;
         state.dragStart = null;
@@ -968,7 +904,6 @@ const handleMouseEvents = () => {
             drawScene();
         }
     });
-
     canvas.addEventListener("mouseup", (event) => {
         const clickDuration = Date.now() - state.dragStartTime;
         const mousePosition = getCanvasCoordinates(event);
@@ -998,7 +933,6 @@ const handleMouseEvents = () => {
         state.dragStart = null;
         state.dragStartTime = null;
     });
-
     canvas.addEventListener(
         "wheel",
         (event) => {
@@ -1011,7 +945,6 @@ const handleMouseEvents = () => {
         { passive: false },
     );
 };
-
 const syncTouchState = (touches) => {
     if (touches.length === 1) {
         const touchPosition = getCanvasCoordinates(touches[0]);
@@ -1028,7 +961,6 @@ const syncTouchState = (touches) => {
         state.lastTouchDistance = 0;
     }
 };
-
 const handleZoomButtons = () => {
     const zoomStepIntensity = 1.2;
     elements.zoomInBtn.addEventListener("click", () => {
@@ -1040,7 +972,6 @@ const handleZoomButtons = () => {
         zoomAt(rect.width / 2, rect.height / 2, 1 / zoomStepIntensity);
     });
 };
-
 const handleTouchEvents = () => {
     let touchStartTime = null;
     canvas.addEventListener(
@@ -1105,7 +1036,6 @@ const handleTouchEvents = () => {
         syncTouchState(event.touches);
     });
 };
-
 elements.serverSelect.addEventListener("change", () => {
     state.currentServer = elements.serverSelect.value;
     drawScene();
@@ -1115,14 +1045,12 @@ elements.serverSelect.addEventListener("change", () => {
         elements.joinBtn.href = "roblox://experiences/start?placeId=12018816388&gameInstanceId=" + encodeURIComponent(elements.serverSelect.value);
     }
 });
-
 elements.qualitySelect.value = state.currentQuality;
 elements.qualitySelect.addEventListener("change", () => {
     state.currentQuality = elements.qualitySelect.value;
     localStorage.setItem("mapQuality", state.currentQuality);
     loadMapImages();
 });
-
 elements.reconnectBtn.addEventListener("click", () => {
     if (state.reconnectTimeout) {
         clearTimeout(state.reconnectTimeout);
@@ -1131,7 +1059,6 @@ elements.reconnectBtn.addEventListener("click", () => {
     state.reconnectAttempts = 0;
     attemptReconnect();
 });
-
 const start = () => {
     trackTransforms();
     loadMapImages();
@@ -1145,5 +1072,4 @@ const start = () => {
     createWebSocket();
     if (window.location !== window.parent.location) elements.popOutBtn.classList.remove("hidden");
 };
-
 start();
