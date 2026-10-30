@@ -19,19 +19,10 @@ const MAP_CONFIG = {
     totalHeight: 12061,
 };
 
-const API_ORIGIN =
-    window.location.hostname.endsWith("github.io")
-        ? "https://map.dovedale.uk"
-        : window.location.origin;
+const BACKEND_ORIGIN = "https://map.dovedale.uk";
+const API_ORIGIN = BACKEND_ORIGIN;
 
-const getWebSocketUrl = () => {
-    const wsHost =
-        window.location.hostname.endsWith("github.io")
-            ? "map.dovedale.uk"
-            : window.location.host;
-    const protocol = window.location.protocol === "http:" ? "ws://" : "wss://";
-    return `${protocol}${wsHost}/api/ws`;
-};
+const getWebSocketUrl = () => `${BACKEND_ORIGIN.replace(/^http/, "ws")}/ws`;
 
 const AREA_MARKERS = {
     "Gleethrop End": {
@@ -158,7 +149,6 @@ const tooltipElements = {
     serverDiv: elements.tooltip.querySelector("#server div"),
 };
 
-// Application State
 class AppState {
     constructor() {
         this.serverData = {};
@@ -202,7 +192,6 @@ class AppState {
 
 const state = new AppState();
 
-// Utility Functions
 const resizeCanvas = (cssWidth, cssHeight) => {
     const dpr = window.devicePixelRatio || 1;
 
