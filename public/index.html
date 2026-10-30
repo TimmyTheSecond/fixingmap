@@ -11,7 +11,7 @@
 	<meta name="description" content="A live map of Dovedale Railway, showing players with a server selector." />
 	<meta name="keywords" content="dovedale, railway, dovedale railway, dovedale map, live map, dovedale railway map" />
 	<link rel="canonical" href="https://map.dovedale.uk/" />
-	<link rel="manifest" href="/manifest.json" />
+	<link rel="manifest" href="./manifest.json" />
 
 	<meta property="og:title" content="Dovedale Live Map" />
 	<meta property="og:description"
@@ -26,7 +26,7 @@
 	<style>
 		@font-face {
 			font-family: 'Inter';
-			src: local('Inter'), url(/Inter.woff2) format('woff2');
+			src: local('Inter'), url('./Inter.woff2') format('woff2');
 		}
 	</style>
 </head>
@@ -43,7 +43,8 @@
 				<p class="text-xs text-zinc-300 m-0">Unable to connect to the server</p>
 			</div>
 			<button id="reconnectBtn" type="button"
-				class="bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-600 disabled:cursor-not-allowed border-none rounded-lg px-3 py-2 text-base font-medium cursor-pointer flex items-center gap-1.5 transition-colors duration-200 whitespace-nowrap">
+				class="bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-600 disabled:cursor-not-allowed border-none rounded-lg px-3 py-2 text-base font-medium cursor-pointer flex items-center gap-1.5 transition-all duration-200"
+				aria-label="Reconnect">
 				<i id="reconnectIcon" class="material-symbols-outlined text-4">refresh</i>
 				Reconnect
 			</button>
@@ -105,7 +106,6 @@
 		</div>
 	</div>
 
-
 	<div class="fixed bottom-2 right-2 grid grid-rows-2 gap-2">
 		<a href="roblox://experiences/start?placeId=12018816388" id="joinBtn" target="_self"
 			class=" bg-zinc-800 p-2 rounded-lg hover:bg-zinc-700 transition z-30 flex items-center justify-center" title="Join Server">
@@ -113,7 +113,7 @@
 		</a>
 		<a href="https://github.com/dovedalerailway/dovedale-map" target="_blank" rel="noopener noreferrer"
 			class="bg-zinc-800 p-2 rounded-lg hover:bg-zinc-700 transition z-30" title="GitHub Repository">
-			<img src="/images/github-mark-white.svg" alt="GitHub Logo" width="28" height="28">
+			<img src="./images/github-mark-white.svg" alt="GitHub Logo" width="28" height="28">
 		</a>
 		<a class="bg-zinc-800 p-2 rounded-lg hover:bg-zinc-700 transition z-30 flex hidden" target="_blank"
 			href="https://map.dovedale.uk" id="pop-out">
@@ -121,11 +121,10 @@
 		</a>
 	</div>
 
-
 	<p class="fixed bottom-2 left-3 z-20 text-zinc-500 text-sm hidden sm:block h-auto" id="hover-hint">Hover over a dot
 		to see the player's name</p>
 
-	<script src="index.js?v=31"></script>
+	<script src="./index.js?v=31"></script>
 </body>
 
 </html>
