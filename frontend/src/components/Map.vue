@@ -129,9 +129,9 @@ onMounted(async () => {
 					:selected="false"
 				/>
 			</template>
-			<template v-for="[playerIndex, player] in Object.entries(players)">
+			<template v-for="player in players" :key="player.userId">
 				<Train
-					v-for="[trainIndex, train] in Object.entries(player.trains)"
+					v-for="(train, trainIndex) in player.trains"
 					:key="trainIndex"
 					:show-info="trainIndex === '0'"
 					:train="train"
