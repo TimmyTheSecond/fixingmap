@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // TODO: abstract logic shared with PlayerDot
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { getPlayerColor, type Player } from "../../utils/players";
 import { ImagePosition, Vector2 } from "../../utils/positions";
 import { useMapStore, useMapZoom } from "../../composables/map-state";
