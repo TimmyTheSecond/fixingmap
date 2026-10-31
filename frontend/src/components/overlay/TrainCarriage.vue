@@ -26,8 +26,6 @@ const carriageScale = computed(() => {
 });
 
 const hovering = ref(false);
-
-const zoom = computed(() => 1 / mapState.zoom);
 const position = computed(() => ImagePosition.fromWorld(carriage.position));
 const length = carriage.size.x;
 const width = carriage.size.y;
